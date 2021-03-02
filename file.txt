@@ -1,0 +1,3 @@
+crete host 1
+create host 2
+
