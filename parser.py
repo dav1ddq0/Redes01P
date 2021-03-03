@@ -12,15 +12,11 @@ import device_handler as dh
 
 # metodos=[lambda name,ports:ins.Instructions.create_hub(name,ports),ins.Instructions.connect_hub_hub() ]
 
-
-
-
-
 def main():
     handler = dh.Device_handler()
-    dic1 ={"create hub": lambda args :  handler.create_hub(args[0],args[1]),
-        "create host" : lambda args : handler.create_hub(args[0],args[1]),
-        "connect":lambda args : handler.connect_hub_hub(args[0],args[1]),
+    dic1 ={"create hub": lambda name, ports_amount :  handler.create_hub(name,ports_amount),
+        "create host" : lambda args : handler.create_pc(args[0]),
+        "connect":lambda args : handler.setup_device_connection(args[0],args[1]),
         "send" :lambda args : handler.send(args[0],args[1]),
         "disconnect":lambda args : handler.disconnect(args[0])}
     # create parser
@@ -48,7 +44,7 @@ def main():
                     print("Invalid parameter")
 
                 if len(codes) == 4:
-                    dic1[codes[0]+ " " + codes[1]](codes[2:])
+                    dic1[codes[0]+ " " + codes[1]](codes[2],ports_amount)
             
             if codes[1] == "host":
                 if len(codes) == 3:
@@ -56,6 +52,13 @@ def main():
 
         elif codes[0] == "connect":
             if len(codes) == 3 and codes[1].find('_') != -1 and codes[2].find('_') != -1:
+                port1, port2 = codes[1], codes[2]
+
+                try:
+                    port1 = int(port1)
+                    port2 = int(port2)
+                except ValueError
+                dic1[codes[0]](codes[1:])
                 
               
 
