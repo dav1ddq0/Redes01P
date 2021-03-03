@@ -15,8 +15,8 @@ time=0
 
 
 
-dic1 ={"create hub":lambda args=ins.Instructions.create_hub(args[0],args[1]),
-        "create host":lambda args=ins.Instructions.create_hub(args[0],args[1])),
+dic1 ={"create hub":lambda args:ns.Instructions.create_hub(args[0],args[1]),
+        "create host":lambda args:ins.Instructions.create_host(args[0],args[1])),
         "connect":lambda args:ins.Instructions.connect_hub_hub(args[0],args[1]),
         "send" :lambda args :ins.Instructions.send(args[0],args[1]),
         "disconnect":lambda args:ins.Instructions.disconnect(args[0])}

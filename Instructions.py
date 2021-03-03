@@ -2,7 +2,7 @@ import Objs
 
 class Instructions:
     @staticmethod
-    def create_pc(name):
+    def create_host(name):
         return Objs.Computer(name)
 
     @staticmethod
