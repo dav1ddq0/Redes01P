@@ -16,9 +16,10 @@ def main():
     handler = dh.Device_handler()
     dic1 ={"create hub": lambda name, ports_amount :  handler.create_hub(name,ports_amount),
         "create host" : lambda args : handler.create_pc(args[0]),
-        "connect":lambda args : handler.setup_device_connection(args[0],args[1]),
+        "connect" : lambda device1_name, device2_name, device1_port, device2_port : handler.setup_device_connection(device1_name, device2_name, device1_port, device2_port),
         "send" :lambda args : handler.send(args[0],args[1]),
-        "disconnect":lambda args : handler.disconnect(args[0])}
+        "disconnect":lambda device_name, device_port : handler.shutdown_device_connection(device_name, device_port)
+        }
     # create parser
     parser = argparse.ArgumentParser(description="Instrucciones del script")
     parser.add_argument('-f', dest='textfile', default=True)
@@ -52,14 +53,27 @@ def main():
 
         elif codes[0] == "connect":
             if len(codes) == 3 and codes[1].find('_') != -1 and codes[2].find('_') != -1:
-                port1, port2 = codes[1], codes[2]
+                device1_name, device1_port = codes[1].split('_')
+                device2_name, device2_port = codes[2].split('_')
 
                 try:
-                    port1 = int(port1)
-                    port2 = int(port2)
-                except ValueError
-                dic1[codes[0]](codes[1:])
+                    device1_port = int(device1_port)
+                    device2_port = int(device2_port)
+
+                except ValueError:
+                    print("Invalidad parameters")
+                dic1[codes[0]](device1_name, device2_name, device1_port, device2_port)
+
+        elif codes[0] == "disconnect":
+            if len(codes) == 2 and codes[1].find('_'):
+                device_name, device_port = codes[1].split('_')
                 
+                try:
+                    device_port = int(device_port)
+
+                except ValueError:
+                    print("Invalidad parameters")
+                dic1[codes[0]](device_name, device_port)
               
 
         
