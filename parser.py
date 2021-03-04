@@ -14,7 +14,8 @@ import device_handler as dh
 
 def main():
     handler = dh.Device_handler()
-    dic1 ={"create hub": lambda name, ports_amount :  handler.create_hub(name,ports_amount),
+    dic1 ={
+        "create hub": lambda name, ports_amount :  handler.create_hub(name,ports_amount),
         "create host" : lambda args : handler.create_pc(args[0]),
         "connect" : lambda device1_name, device2_name, device1_port, device2_port : handler.setup_device_connection(device1_name, device2_name, device1_port, device2_port),
         "send" :lambda args : handler.send(args[0],args[1]),
@@ -24,7 +25,7 @@ def main():
     parser = argparse.ArgumentParser(description="Instrucciones del script")
     parser.add_argument('-f', dest='textfile', default=True)
     args = parser.parse_args()
-    filename=args.textfile
+    filename = args.textfile
     f = open(filename, 'r')
     for line in f.readlines():
         instruction_time = 0
