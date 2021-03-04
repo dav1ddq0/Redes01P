@@ -5,7 +5,7 @@ caller ={
         "hub": lambda name, ports_amount :  handler.create_hub(name,ports_amount),
         "host" : lambda name : handler.create_pc(name),
         "connect" : lambda args:connect_call(args),
-        "send" :lambda args : send_connect(args),
+        #"send" :lambda args : send_connect(args),
         "disconnect":lambda args :  disconnect_call(args)
         }
 

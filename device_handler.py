@@ -23,11 +23,11 @@ class Device_handler:
         
     def create_pc(self, name):
         newpc=Objs.Computer(name)
-        hosts.append(newpc)
+        self.hosts.append(newpc)
 
     def create_hub(self, name, ports):
         newhub = Objs.Hub(name, ports)
-        hubs.append(newhub)
+        self.hubs.append(newhub)
 
     def setup_device_connection(self, device1_name, device2_name, device1_port, device2_port):
         #0 not_setted #1 => Hub #2 => PC 
