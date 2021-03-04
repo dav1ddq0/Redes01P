@@ -4,6 +4,7 @@ class Device_handler:
     @property
     def host(self):
         return self.host
+        
     def __init__(self) -> None:
         self.hubs = []
         self.hosts = []
