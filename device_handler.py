@@ -1,6 +1,9 @@
 import Objs
 
 class Device_handler:
+    @property
+    def host(self):
+        return self.host
     def __init__(self) -> None:
         self.hubs = []
         self.hosts = []
@@ -18,10 +21,12 @@ class Device_handler:
         return 0, None
         
     def create_pc(self, name):
-        return Objs.Computer(name)
+        newpc=Objs.Computer(name)
+        hosts.append(newpc)
 
     def create_hub(self, name, ports):
-        return Objs.Hub(name, ports)
+        newhub = Objs.Hub(name, ports)
+        hubs.append(newhub)
 
     def setup_device_connection(self, device1_name, device2_name, device1_port, device2_port):
         #0 not_setted #1 => Hub #2 => PC 
