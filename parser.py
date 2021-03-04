@@ -15,7 +15,6 @@ def validInst(inst:str):
     return inst != "create" and inst != "connect" and inst != "send" and inst != "disconnect"
 
 def create_call(args:list):
-    print(args)
     if args[0] == "hub":
         ports_amount = 0
         try :
@@ -32,7 +31,7 @@ def create_call(args:list):
         else:
             print("Invalid number of args ")
 
-def connect_call(args):
+def connect_call(args:list):
     if len(args) != 2 :
         print("Invalid args count ")
         
@@ -42,7 +41,7 @@ def connect_call(args):
         handler.connect(por1,port2)
         
 
-def disconnect_call(args):
+def disconnect_call(args:list):
     if len(args) != 1:
         print("Invalida count of args ")
     else:

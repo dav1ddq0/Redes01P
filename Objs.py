@@ -2,7 +2,7 @@ import os
 
 ports={}
 class Port:
-    def __init__(name):
+    def __init__(self,name):
         self.name=name
         self.cable=False
         self.next=None
