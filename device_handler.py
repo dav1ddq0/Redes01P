@@ -4,10 +4,11 @@ class Device_handler:
     @property
     def host(self):
         return self.host
-        
+
     def __init__(self) -> None:
         self.hubs = []
         self.hosts = []
+        self.port={}
         self.time = 0
 
     def __identify_device(self, name): #Private method to identify wether a device is a hub or a host
@@ -58,22 +59,30 @@ class Device_handler:
         pc_1.connections.append(pc_2)
         pc_2.connections.append(pc_1)
         return True
-
-    def __connect_hub_hub(self, hub_1 : Objs.Hub, hub_2 : Objs.Hub,port_hub_1 : int, port_hub_2 : int):
-        if hub_1[port_hub_1] != None or hub_2[port_hub_2] != None:
-            return False
-
-        hub_1.connections[port_hub_1] = hub_2
-        hub_2.connections[port_hub_2] = hub_1  
-        return True
     
-    def __connect_hub_pc(self, hub : Objs.Hub, pc : Objs.Computer, hub_port : int):
-        if hub.connections[hub_port] != None or pc.connections[0] != None:
-            return False
+    def connect(por1:str,port2:str):
+        if port1 not in Objs.ports.keys():
+            print(f"Error the port {port1} not exist")
+        elif port2 not in Objs.ports.keys():
+            print(f"Error the port {port2} not exist")
+        else:
+            Objs.ports[port1].connect(por2)
 
-        hub.connections[hub_port] = pc
-        pc.connections[0] = hub
-        return True
+    # def __connect_hub_hub(self, hub_1 : Objs.Hub, hub_2 : Objs.Hub,port_hub_1 : int, port_hub_2 : int):
+    #     if hub_1[port_hub_1] != None or hub_2[port_hub_2] != None:
+    #         return False
+
+    #     hub_1.connections[port_hub_1] = hub_2
+    #     hub_2.connections[port_hub_2] = hub_1  
+    #     return True
+    
+    # def __connect_hub_pc(self, hub : Objs.Hub, pc : Objs.Computer, hub_port : int):
+    #     if hub.connections[hub_port] != None or pc.connections[0] != None:
+    #         return False
+
+    #     hub.connections[hub_port] = pc
+    #     pc.connections[0] = hub
+    #     return True
 
     def shutdown_device_connection(self, device_name, device_port):
         device_type, device = self.__identify_device(device_name)
@@ -85,19 +94,26 @@ class Device_handler:
 
         return connection_succesfully_shutdown
 
-    def __disconnect_pc(self, pc : Objs.Computer):
-        if pc.connections[0] != None:
-            pc.connections[0] = None
-            return True
+    def disconnect(port):
+        if port not in Objs.ports.keys():
+            print(f"This port {port} not exist")
+        else:
+            Objs.ports[port].disconnect()
+
+            
+    # def __disconnect_pc(self, pc : Objs.Computer):
+    #     if pc.connections[0] != None:
+    #         pc.connections[0] = None
+    #         return True
         
-        return False
+    #     return False
 
-    def __disconnect_hub(self, hub : Objs.Hub, hub_port : int):
-        if hub.connections[hub_port] != None:
-            hub.connections[hub_port] = None
-            return True
+    # def __disconnect_hub(self, hub : Objs.Hub, hub_port : int):
+    #     if hub.connections[hub_port] != None:
+    #         hub.connections[hub_port] = None
+    #         return True
 
-        return False
+    #     return False
 
     def send(self, origin_pc : Objs.Computer, info):
         pass
