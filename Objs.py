@@ -3,7 +3,7 @@ class Port:
         self.name = name
         self.cable = False
         self.next = None
- 
+
     #def connect(self,other_port):
     #    if self.next != None:
     #        print(f"Sorry the port {self.name} is already connected with {self.next}")
@@ -25,7 +25,7 @@ class Port:
     #    self.next=None        
 
 class Computer:
-    def __init__(self, name) -> None:
+    def __init__(self, name:str) -> None:
         self.name = name
         self.connections = [None]*1
         portname=f"{name}_1"
@@ -41,7 +41,7 @@ class Computer:
         f.close()
 
 class Hub:
-    def __init__(self, name, ports_amount : int) -> None:
+    def __init__(self, name:str, ports_amount : int) -> None:
         self.name = name
         self.connections = [None]*ports_amount
         self.file=f"{name}.txt"
