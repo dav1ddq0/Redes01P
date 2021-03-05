@@ -57,7 +57,7 @@ def parse(line):
     
     elif codes[0] == "send":
         if codes[1].find('_'):
-            device_name, device1_port = codes[1].split('_')
+            device_name, device_port = codes[1].split('_')
 
             try:
                 device_port = int(device_port)
@@ -70,8 +70,8 @@ def parse(line):
                 else : print("The data to send must be a binary code")
                       
 def __check_binary(string):
-    s = set(string)
-    p = {0 , 1}
+    p = set(string)
+    s = {0 , 1}
 
     if s == p or p == {'0'} or p == {'1'}:
         return True
