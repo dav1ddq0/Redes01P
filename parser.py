@@ -30,7 +30,7 @@ def create_call(args:list):
             name=args[1]
             caller["host"](name)
         else:
-            print("Invalid number of args ")
+            print("Invalid number of args")
 
 def connect_call(args):
     if len(args) == 3 and args[1].find('_') != -1 and args[2].find('_') != -1:
@@ -41,7 +41,7 @@ def connect_call(args):
             device2_port = int(device2_port)
             handler.setup_device_connection(device1_name, device2_name, device1_port, device2_port)
         except ValueError:
-            print("Invalidad parameters")
+            print("Invalid parameters")
         
 
 def disconnect_call(args):
