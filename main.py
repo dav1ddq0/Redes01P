@@ -5,8 +5,6 @@ import device_handler as dh
 
 def main():
     p.handler = dh.Device_handler()
-    print(p.handler.time)
-    # create parser
     parser = argparse.ArgumentParser(description="Instrucciones del script")
     parser.add_argument('-f', dest='textfile', default=True)
     args = parser.parse_args()
