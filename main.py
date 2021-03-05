@@ -6,6 +6,10 @@ def main():
     
     handler = dh.Device_handler()
     parser = argparse.ArgumentParser(description="Instrucciones del script")
+    errors = {1 : "port is busy",
+              2 : "port does not exist",
+              3 : "port is free"
+    }
     caller ={
         "create hub" : lambda name, ports_amount :  handler.create_hub(name, ports_amount),
         "create host" : lambda name : handler.create_pc(name),
@@ -19,7 +23,22 @@ def main():
     f = open(filename, 'r')
     for line in f.readlines():
         instruction, args2 = myParser.parse(line)
-        caller[instruction](args2)
+        if(instruction == "create hub" or instruction == "create host"):
+            caller[instruction](args2)
+
+        if(instruction == "connect"):
+            error_type_port1, error_type_port2 = caller[instruction](args2)
+            if(error_type_port1 != 0 and error_type_port2 != 0):
+                print(f"{args2[0]} {errors[error_type_port1]}")
+                print(f"{args2[1]} {errors[error_type_port2]}")
+
+        if(instruction == "disconnect"):
+            error_type = caller[instruction](args2)
+            if(error_type):
+                print(f"{args2[0]} {errors[error_type]}")
+
+        if(instruction == "send"):
+            
         
 
 if __name__== "__main__":
