@@ -28,7 +28,7 @@ def main():
 
         if(instruction == "connect"):
             error_type_port1, error_type_port2 = caller[instruction](args2)
-            if(error_type_port1 != 0 and error_type_port2 != 0):
+            if(error_type_port1 and error_type_port2):
                 print(f"{args2[0]} {errors[error_type_port1]}")
                 print(f"{args2[1]} {errors[error_type_port2]}")
 
@@ -38,6 +38,7 @@ def main():
                 print(f"{args2[0]} {errors[error_type]}")
 
         if(instruction == "send"):
+            pass
             
         
 
