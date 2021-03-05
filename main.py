@@ -7,6 +7,7 @@ errors = {  1 : "port is busy",
             2 : "port does not exist",
             3 : "port is free"
         }
+handler = dh.Device_handler()        
 # dicc that func like a launcher to the principal methods
 caller ={
         "hub" : lambda args:  handler.create_hub(args[0], args[1]),
@@ -18,7 +19,7 @@ caller ={
 
 # main :D
 def main():
-    handler = dh.Device_handler()
+    
     parser = argparse.ArgumentParser(description="Instrucciones del script")
     parser.add_argument('-f', dest='textfile', default=True)
     args = parser.parse_args()
