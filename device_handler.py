@@ -7,13 +7,14 @@ class Device_handler:
 
     def __init__(self) -> None:
         self.hubs = []
-        self.hosts = []
+        self.hosts = [Objs.Computer]
         self.connections = {}
         self.time = 0
 
     def __validate_send(self, name_port):
         for host in self.hosts:
             if host.name + "_1" == name_port:
+                if(host.)
                 return True
 
         return False
@@ -84,7 +85,7 @@ class Device_handler:
     def setup_connection(self, name_port1, name_port2):
         #error types : 0 => not an error, #1 => one of the ports is already connected #2 => one of the ports does not exist
         #device types : 0 => not a device, 1 => hub, 2 => host
-        _,port1 = name_port1.split('_') 
+        _,port1 = name_port1.split('_')
         _,port2 = name_port2.split('_')
         port1 = int(port1); port2  = int(port2)
         error_type_name_port1 = 0; error_type_name_port2 = 0
@@ -96,20 +97,20 @@ class Device_handler:
 
         if(error_type_name_port1 == 0 and error_type_name_port2 == 0):
             if device1_Type == 1 and device2_Type == 1:
-                self.connections[name_port1] = device2.ports[port2]
-                self.connections[name_port2] = device1.ports[port1]
+                self.connections[name_port1] = (device2, port2)
+                self.connections[name_port2] = (device1, port1)
             
             elif device1_Type == 1 and device2_Type == 2:
-                self.connections[name_port1] = device2.port
-                self.connections[name_port2] = device1.ports[port1]
+                self.connections[name_port1] = device2
+                self.connections[name_port2] = (device1, port1)
             
             elif device1_Type == 2 and device2_Type == 1:
-                self.connections[name_port1] = device2.port[port2]
-                self.connections[name_port2] = device1.port
+                self.connections[name_port1] = (device2, port2)
+                self.connections[name_port2] = device1
 
             elif device1_Type == 2 and device2_Type == 2:
-                self.connections[name_port1] = device2.port
-                self.connections[name_port2] = device1.port
+                self.connections[name_port1] = device2
+                self.connections[name_port2] = device1
     
         return error_type_name_port1, error_type_name_port2
 
@@ -146,7 +147,7 @@ class Device_handler:
 
     def shutdown_connection(self, name_port):
         #error_type 3 => the port is not connected
-        error_type = False; device = None
+        error_type = False
         error_type, device = self.__validate_disconnection(name_port)
 
         if(error_type):

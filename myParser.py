@@ -34,7 +34,7 @@ def __check_binary(string):
 
     return False
 
-def create_parse(args:list):
+def create_parse(args : list):
     if args[1] == "hub":
         ports_amount = 0
         try :
@@ -53,7 +53,7 @@ def create_parse(args:list):
         else : print("Invalid amount of arguments")
 
 
-def connect_parse(args:list):
+def connect_parse(args : list):
 
     if args[1].find('_') != -1 and args[2].find('_') != -1:
             device1_name, device1_port = args[1].split('_')
@@ -69,13 +69,6 @@ def connect_parse(args:list):
                 # connect,port1,port2
                 return args[0], args[1], args[2]
             else : print("Invalid amount of arguments")
-
-    if len(args) != 2 :
-        print("Invalid args count ")
-
-    else:
-        port1=args[0]
-        port2=args[2]
 
 def send_parse(args:list):
     if args[1].find('_'):

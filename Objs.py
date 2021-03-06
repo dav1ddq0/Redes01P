@@ -1,19 +1,19 @@
 from enum import Enum
-Status=enum(Null=1,Sending=2)
+Status = Enum(Null = 1,Sending = 2)
 
-class Channel:
-    def __init__(self):
-        self.data=None
-        self.status=Status.Null
-    def read():
-        return self.data
+#class Channel:
+#    def __init__(self):
+#        self.data=None
+#        self.status= Status.Null
+#    def read():
+#        return self.data
 class Port:
     def __init__(self, name):
         self.name = name
-        self.cable = False
-        self.next = None
-        self.data=None
-        self.time=0
+        self.status = Status.Null
+        #self.next = None
+        self.data = None
+        self.time = 0
 
     def Stopwatcher(self):
         if time !=0:
@@ -54,13 +54,13 @@ class Computer:
         self.data=None
     
     def UpdateFile(self,message):
-        f=open(self.file,'w')
+        f = open(self.file,'w')
         f.write(message)
         f.close()
     
-    def Log(self,time,data,action):
-        message=f"{time} {self.port} {action} {data}")
-        UpdateFile(message)
+    def Log(self, time, data, action):
+        message = f"{time} {self.port} {action} {data}"
+        self.UpdateFile(message)
 
 class Hub:
     def __init__(self, name:str, ports_amount : int) -> None:
