@@ -1,19 +1,14 @@
 from enum import Enum
-Status = Enum(Null = 1,Sending = 2)
-
-#class Channel:
-#    def __init__(self):
-#        self.data=None
-#        self.status= Status.Null
-#    def read():
-#        return self.data
+class Status(Enum):
+    Host = 1
+    Hub  = 2
 class Port:
-    def __init__(self, name):
+    def __init__(self, name:str,type:Status):
         self.name = name
-        self.status = Status.Null
-        #self.next = None
-        self.data = None
-        self.time = 0
+        self.cable = False
+        self.next = None
+        self.type=Status
+        self.time=0
 
     def Stopwatcher(self):
         if time !=0:
@@ -46,7 +41,7 @@ class Computer:
         self.name = name
         self.connections = [None]*1
         portname=f"{name}_1"
-        port = Port(portname)
+        port = Port(portname,Status.Host)
         self.port = port
         self.file=f"{name}.txt"
         f=open(self.file,'w')
@@ -58,9 +53,9 @@ class Computer:
         f.write(message)
         f.close()
     
-    def Log(self, time, data, action):
-        message = f"{time} {self.port} {action} {data}"
-        self.UpdateFile(message)
+    def Log(self,time,data,action):
+        message=f"{time} {self.port} {action} {data}"
+        UpdateFile(message)
 
 class Hub:
     def __init__(self, name:str, ports_amount : int) -> None:
@@ -70,7 +65,7 @@ class Hub:
         self.ports=[] # instance a list of ports
         for i in range(ports_amount):
             portname = f"name_{i+1}"
-            port = Port(portname)
+            port = Port(portname,Status.Hub)
             self.ports.append(port)
         #make the hub file
         f=open(self.file,'w')
