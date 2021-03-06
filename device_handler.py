@@ -175,6 +175,7 @@ class Device_handler:
 
     #     return False
 
+    
     def send(self, origin_pc : Objs.Computer, info):
         if self.__validate_send(origin_pc):
             pass

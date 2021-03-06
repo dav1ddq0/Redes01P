@@ -1,9 +1,26 @@
+from enum import Enum
+Status=enum(Null=1,Sending=2)
+
+class Channel:
+    def __init__(self):
+        self.data=None
+        self.status=Status.Null
+    def read():
+        return self.data
 class Port:
     def __init__(self, name):
         self.name = name
         self.cable = False
         self.next = None
+        self.data=None
+        self.time=0
 
+    def Stopwatcher(self):
+        if time !=0:
+            self.time -=1
+            if time ==0:
+                self.data=None
+            
     #def connect(self,other_port):
     #    if self.next != None:
     #        print(f"Sorry the port {self.name} is already connected with {self.next}")
@@ -34,11 +51,16 @@ class Computer:
         self.file=f"{name}.txt"
         f=open(self.file,'w')
         f.close()
+        self.data=None
     
-    def UpdateFile(self,name,message):
+    def UpdateFile(self,message):
         f=open(self.file,'w')
         f.write(message)
         f.close()
+    
+    def Log(self,time,data,action):
+        message=f"{time} {self.port} {action} {data}")
+        UpdateFile(message)
 
 class Hub:
     def __init__(self, name:str, ports_amount : int) -> None:
@@ -58,3 +80,4 @@ class Hub:
         f=open(self.file,'w')
         f.write(message)
         f.close()    
+    
