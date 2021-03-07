@@ -78,7 +78,7 @@ def connect_parse(args:list):
 
 def send_parse(args:list):
     if args[1].find('_'):
-        device_name, device1_port = args[1].split('_')
+        device_name, device_port = args[1].split('_')
         try:
             device_port = int(device_port)
         except ValueError:
