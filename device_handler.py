@@ -96,7 +96,8 @@ class Device_handler:
 
         if self.__validate_send(origin_pc): #El send es valido
             device = Objs.ports[origin_pc].parent
-            device.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+            device.Log(data, "send")
+            device.port.cable = data
             destination_device, destination_port = Objs.ports[self.connections[origin_pc]].parent, Objs.ports[self.connections[origin_pc]]
             self.__spread_data(destination_device, data, Objs.ports[destination_port])   
 
@@ -104,12 +105,16 @@ class Device_handler:
     def __spread_data(self, device, data, data_incoming_port):
         
         if isinstance(device, Objs.Computer):
-            device.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+            device.port.cable = data
+            device.Log(data, "send")
+
 
         elif isinstance(device, Objs.Hub):
+            device.Log(data, "receive", data_incoming_port.name)
             for port in device.ports:
-                port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
-                if(port != data_incoming_port):
+                device.Log(data, "send", port.name)
+                port.cable = data
+                if port != data_incoming_port:
                     next_device, next_port = Objs.ports[self.connections[port.name]].parent, Objs.ports[self.connections[port.name]]
                     self.__spread_data(next_device, data, next_port)
                     

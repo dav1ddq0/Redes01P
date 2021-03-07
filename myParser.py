@@ -74,7 +74,7 @@ def send_parse(args:list):
     if args[1].find('_'):
         device_name, device_port = args[1].split('_')
         try:
-            device1_port = int(device1_port)
+            device1_port = int(device_port)
         except ValueError:
             print("Invalid parameters")
         if len(args) == 3:

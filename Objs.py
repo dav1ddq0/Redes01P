@@ -6,13 +6,13 @@ class Status(Enum):
     Null = 2
     One = 1
     Zero = 0
+
 class Port:
     def __init__(self, name:str, parent):
         self.name = name
-        self.data = None
+        self.cable = None
         self.cable_connected = False
         self.parent = parent
-        self.type = Status.Null
         self.time = 0
 
     #def Stopwatcher(self):
@@ -31,17 +31,17 @@ class Computer:
         ports["portname"]= port
         self.port = port
         self.file = f"{name}.txt"
-        f = open(self.file,'w')
+        f = open(self.file, 'w')
         f.close()
-        self.data=None
+        self.data = None
     
-    def UpdateFile(self,message):
-        f = open(self.file,'w')
+    def UpdateFile(self, message):
+        f = open(self.file, 'w')
         f.write(message)
         f.close()
     
-    def Log(self,time,data,action):
-        message=f"{time} {self.port} {action} {data}"
+    def Log(self, data, action, time=0):
+        message = f"{time} {self.port} {action} {data}"
         self.UpdateFile(message)
 
 class Hub:
@@ -56,11 +56,15 @@ class Hub:
             self.ports.append(port)
             ports[portname] = port
         #make the hub file
-        f = open(self.file,'w')
+        f = open(self.file, 'w')
         f.close()
 
-    def UpdateFile(self,name,message):
+    def UpdateFile(self, name, message):
         f=open(self.file,'w')
         f.write(message)
         f.close()    
-    
+
+    def Log(self, data, action, port, time=0):
+        message = f"{time} {port} {action} {data}"
+        self.UpdateFile(message)
+
