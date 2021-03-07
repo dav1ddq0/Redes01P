@@ -67,7 +67,7 @@ class Device_handler:
 
         return True
 
-    def upgrade_network_state(time: int):
+    def upgrade_network_state(self, time: int):
         while self.time < time and len(self.host_sending) > 0:
             self.time += 1
             self.update_host_sending()

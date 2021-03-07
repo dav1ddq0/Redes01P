@@ -45,12 +45,12 @@ def create_parse(args : list, time: int):
             print("Invalid parameter")
         if len(args) == 4:
                 # hub,name,ports_amount
-                return args[1], args[2], ports_amount, time
+                return args[1], [args[2], ports_amount, time]
         else : print("Invalid amount of arguments")
         
     elif args[1] == "host":
         if len(args) == 3:
-            return args[1], args[2], time
+            return args[1], [args[2], time]
             
         else : print("Invalid amount of arguments")
 
@@ -69,7 +69,7 @@ def connect_parse(args: list, time: int):
             
             if len(args) == 3:
                 # connect,port1,port2
-                return args[0], args[1], args[2], time
+                return args[0], [args[1], args[2], time]
             else : print("Invalid amount of arguments")
 
 def send_parse(args: list, time: int):
@@ -81,7 +81,7 @@ def send_parse(args: list, time: int):
             print("Invalid parameters")
         if len(args) == 3:
             if __check_binary(args[2]):
-                return args[0], args[1], args[2], time
+                return args[0], [args[1], args[2], time]
             else : print("The data to send must be a binary code")
 
 # sintax error of insr time disconnect
@@ -95,7 +95,7 @@ def disconnect_parse(args: list,time: int):
             print("Invalid parameters")
         if len(args) == 2: 
             # disconnect,port
-            return args[0], args[1], time
+            return args[0], [args[1], time]
         else : print("Invalid amount of arguments")
     else:
         print("Invalid format")    
