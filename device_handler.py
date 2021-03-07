@@ -1,8 +1,12 @@
+from os import name, stat
 import Objs
 
-errors = {  1 : "is busy",
+errors = {  1 : "is free",
             2 : "does not exist",
-            3 : "is free"
+            3 : "is not free",
+            4 : "the device must be a host",
+            5 : "host busy (collision)",
+            6 : "has a cable connected, but its other endpoint is not connected to another device"
         }
 class Device_handler:
     @property
@@ -13,61 +17,56 @@ class Device_handler:
         self.hubs = []
         self.hosts = []
         self.connections = {}
-        self.ports={}
         self.time = 0
 
     def __validate_send(self, name_port):
-        error_type = 0; device = None
-        _, port = name_port.split('_')
-        for host in self.hosts:
-            if host.name + "_1" == name_port:
-                if name_port in self.connections.keys() and self.connections[name_port] != None:
-                    if(host.port.status == Objs.Status.Null):
-                        device = host
-                    else : error_type = 5
-                else : error_type = 
-                    
-        if(device == None):
-            for hub in self.hubs:
-                if hub.name + "_{}".format(port) == name_port:
-                    device = hub, error_type = 4
-        
-        if(device == None):
-            error_type = 2
+        port = Objs.ports[name_port]
+        if not isinstance(port.parent, Objs.Computer):
+            print(f"port {name_port} {errors[4]}")
+            return False
 
-        return error_type, device
+        elif name_port not in Objs.ports.keys():
+            print(f"port {name_port} {errors[2]}")
+            return False
+        
+        elif not port.cable_connected:
+            print(f"port {name_port} {errors[1]}")
+            return False
+    
+        elif name_port not in self.connections.keys():
+            print(f"port {name_port} {errors[6]}")
+            return False
+
+        return True
 
     def __validate_disconnection(self, name_port):
-        if name_port not in ports:
+        port = Objs.ports[name_port]
+        
+        if name_port not in Objs.ports.keys():
              print(f"port {name_port} {errors[2]}")
              return False
-        elif name_port not in connections:
-                print(f"port {name_port} {errors[3]}")
+
+        elif not port.cable_connected:
+                print(f"port {name_port} {errors[1]}")
                 return False
+
         return True        
     
-    def __validate_connection(self, name_port1,name_port2): #Private method to identify wether a device is a hub or a host
-        if name_port1 not in ports_d.keys():
-            print(f"port {name_port1} {errors[2]}")
+    def __validate_connection(self, name_port): #Private method to identify wether a device is a hub or a host
+        port = Objs.ports[name_port]
+
+        if name_port not in Objs.ports.keys():
+            print(f"port {name_port} {errors[2]}")
             return False
-        elif name_port2 not in ports_d.keys():
-            print(f"port {name_port2} {errors[2]}")
-            return False
-        else:
-            port1=ports_d[name_port1]
-            port2=ports_d[name_port2]
-            if  port1.cable_connected:
-                print(f"Port{name_port1} {errors[1]}")
+
+        elif  port.cable_connected:
+                print(f"Port{name_port} {errors[3]}")
                 return False
-            elif port2.cable_connected:    
-                print(f"Port{name_port2} {errors[1]}")
-                return False
+
         return True
             
-
-        
     def create_pc(self, name):
-        newpc =Objs.Computer(name)
+        newpc = Objs.Computer(name)
         self.hosts.append(newpc)
 
     def create_hub(self, name, ports):
@@ -76,23 +75,21 @@ class Device_handler:
 
     def setup_connection(self, name_port1, name_port2):
 
-        if __validate_connection(name_port1,name_port2):
-            port1=ports_d(name_port1)
-            port2=ports_d(name_port2)
-            connections[name_port1]=name_port2
-            connections[name_port2]=name_port1
-            port1.cable_connected=True
-            porr2.cable_connected=False
-        
-
+        if self.__validate_connection(name_port1) and self.__validate_connection(name_port2):
+            port1 = Objs.ports[name_port1]
+            port2 = Objs.ports[name_port2]
+            self.connections[name_port1] = name_port2
+            self.connections[name_port2] = name_port1
+            port1.cable_connected = True
+            port2.cable_connected = True
     
     def shutdown_connection(self, name_port):
-        if __validate_disconnection(name_port):
-            port1 =ports_d[nameport]
-            port1.cable_connected=False
-            nameport2=connections[name_port]
-            del connections[name_port]
-            del connections[name_port2]
+        if self.__validate_disconnection(name_port):
+            port1 = Objs.ports[name_port]
+            port1.cable_connected = False
+            name2, port2 = self.connections[name_port]
+            del self.connections[name_port]
+            del self.connections[f"{name2}_{port2}"]
             
     #def disconnect(self, port):
     #    if port not in Objs.ports.keys():
@@ -117,28 +114,30 @@ class Device_handler:
 
     
     def send(self, origin_pc, data):
-        #error_type 3 => the port is not connected
-        #error_type 4 => the device must be a host
-        #error_type 5 => the host is busy (Collision)
-        
-        device = None; error_type = 0
-        device, error_type = self.__validate_send(origin_pc)
 
-        if(error_type == 0): #El send es valido
+        if self.__validate_send(origin_pc): #El send es valido
+            device = Objs.ports[origin_pc].parent
             device.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
-            destination_device, destination_port = self.connections[origin_pc]
-            self.__spread_data(device, data)   
+            destination_device, destination_port = Objs.ports[self.connections[origin_pc]].parent, Objs.ports[self.connections[origin_pc]]
+            self.__spread_data(destination_device, data, Objs.ports[destination_port])   
 
     
-    def __spread_data(self, origin, data, origin_port = None):
+    def __spread_data(self, device, data, data_incoming_port):
         
-        if isinstance(origin, Objs.Computer):
-            origin.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
-           
-            self.__spread_data(device, data, destiny_port)
+        if isinstance(device, Objs.Computer):
+            device.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+
+        elif isinstance(device, Objs.Hub):
+            for port in device.ports:
+                port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+                if(port != data_incoming_port):
+                    next_device, next_port = Objs.ports[self.connections[port.name]].parent, Objs.ports[self.connections[port.name]]
+                    self.__spread_data(next_device, data, next_port)
+                    
 
 
-        else :
+
+
             
 
       
