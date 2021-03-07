@@ -102,6 +102,7 @@ class Device_handler:
             self.__spread_data(destination_device, data, Objs.ports[destination_port])   
 
     
+    
     def __spread_data(self, device, data, data_incoming_port):
         
         if isinstance(device, Objs.Computer):
