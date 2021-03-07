@@ -11,11 +11,12 @@ class Port:
         self.type=Status
         self.time = 0
 
-    def Stopwatcher(self):
-        if time !=0:
-            self.time -=1
-            if time ==0:
-                self.data=None
+
+    #def Stopwatcher(self):
+    #    if time !=0:
+    #        self.time -=1
+    #        if time ==0:
+    #            self.data=None
             
     #def connect(self,other_port):
     #    if self.next != None:
