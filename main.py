@@ -31,7 +31,6 @@ def main():
     for line in f.readlines():
         instruction, args2 = myParser.parse(line)
         caller[instruction](args2)
-        
 
 if __name__== "__main__":
     main()

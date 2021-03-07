@@ -6,7 +6,7 @@ caller ={
         }
 
 # parse de linne of the file
-def parse(line:str):
+def parse(line : str):
     #remove the line jump
     line = line.replace('\n','')
     #divide the line in tokens
@@ -22,8 +22,8 @@ def parse(line:str):
     if codes[0] not in caller.keys():
         print(f"{codes[0]} is invalid command")
         return
-    else
-        return caller(codes[0])
+    else:
+        return caller[codes[0]]
 
 def __check_binary(string):
     s = set(string)
@@ -34,7 +34,7 @@ def __check_binary(string):
 
     return False
 
-def create_parse(args:list):
+def create_parse(args : list):
     if args[1] == "hub":
         ports_amount = 0
         try :
@@ -49,10 +49,11 @@ def create_parse(args:list):
     elif args[1] == "host":
         if len(args) == 3:
             return args[1], args[2]
+            
         else : print("Invalid amount of arguments")
 
 
-def connect_parse(args:list):
+def connect_parse(args : list):
 
     if args[1].find('_') != -1 and args[2].find('_') != -1:
             device1_name, device1_port = args[1].split('_')
@@ -69,18 +70,11 @@ def connect_parse(args:list):
                 return args[0], args[1], args[2]
             else : print("Invalid amount of arguments")
 
-    if len(args) != 2 :
-        print("Invalid args count ")
-
-    else:
-        port1=args[0]
-        port2=args[2]
-
 def send_parse(args:list):
     if args[1].find('_'):
         device_name, device_port = args[1].split('_')
         try:
-            device_port = int(device_port)
+            device1_port = int(device1_port)
         except ValueError:
             print("Invalid parameters")
         if len(args) == 3:
