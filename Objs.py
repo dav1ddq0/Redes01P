@@ -1,7 +1,7 @@
 from enum import Enum
 
 ports = {}
-
+transmition_time = 3
 class Status(Enum):
     Null = 2
     One = 1
@@ -15,12 +15,8 @@ class Port:
         self.parent = parent
         self.time = 0
 
-    #def Stopwatcher(self):
-    #    if time !=0:
-    #        self.time -=1
-    #        if time ==0:
-    #            self.data=None
-               
+
+
 
 class Computer:
     def __init__(self, name:str) -> None:
@@ -31,6 +27,8 @@ class Computer:
         ports["portname"]= port
         self.port = port
         self.file = f"{name}.txt"
+        self.data = None
+        self.time_remaining = 0
         f = open(self.file, 'w')
         f.close()
     
@@ -43,12 +41,26 @@ class Computer:
         message = f"{time} {self.port} {action} {data}"
         self.UpdateFile(message)
 
+    def Stopwatcher(self):
+        if self.time_remaining != 0:
+            self.time -= 1    
+
+
+    def Next_Bit(self):
+        n=len(self.data)
+        if n > 0:
+            next = self.data[n-1]
+            self.data = self.data[0:n-2]
+            self.time_remaining=transmition_time
+            return next
+        return None    
+        
 class Hub:
-    def __init__(self, name:str, ports_amount : int) -> None:
+    def __init__(self, name: str, ports_amount: int) -> None:
         self.name = name
         self.connections = [None]*ports_amount
         self.file = f"{name}.txt"
-        self.ports=[] # instance a list of ports
+        self.ports = []  # instance a list of ports
         for i in range(ports_amount):
             portname = f"name_{i+1}"
             port = Port(portname, self)
