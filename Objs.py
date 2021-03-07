@@ -40,7 +40,7 @@ class Computer:
         f.write(message)
         f.close()
     
-    def Log(self,time,data,action):
+    def Log(self, time, data, action):
         message=f"{time} {self.port} {action} {data}"
         self.UpdateFile(message)
 

@@ -56,8 +56,8 @@ def create_parse(args : list):
 def connect_parse(args : list):
 
     if args[1].find('_') != -1 and args[2].find('_') != -1:
-            device1_name, device1_port = args[1].split('_')
-            device2_name, device2_port = args[2].split('_')
+            _, device1_port = args[1].split('_')
+            _, device2_port = args[2].split('_')
 
             try:
                 device1_port = int(device1_port)
@@ -72,7 +72,7 @@ def connect_parse(args : list):
 
 def send_parse(args:list):
     if args[1].find('_'):
-        device_name, device1_port = args[1].split('_')
+        _, device1_port = args[1].split('_')
         try:
             device1_port = int(device1_port)
         except ValueError:
@@ -85,7 +85,7 @@ def send_parse(args:list):
 # sintax error of insr time disconnect
 def disconnect_parse(args:list):
     if args[1].find('_'):
-        device_name, device_port = args[1].split('_')
+        _, device_port = args[1].split('_')
             
         try:
             device_port = int(device_port)
