@@ -1,14 +1,15 @@
 from enum import Enum
 class Status(Enum):
-    Host = 1
-    Hub  = 2
+    Null = 2
+    One = 1
+    Zero = 0
 class Port:
-    def __init__(self, name:str,type:Status):
+    def __init__(self, name:str):
         self.name = name
-        self.cable = False
-        self.next = None
+        self.status = Status.Null
+        #self.next = None
         self.type=Status
-        self.time=0
+        self.time = 0
 
     def Stopwatcher(self):
         if time !=0:

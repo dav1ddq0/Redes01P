@@ -7,17 +7,30 @@ class Device_handler:
 
     def __init__(self) -> None:
         self.hubs = []
-        self.hosts = [Objs.Computer]
+        self.hosts = []
         self.connections = {}
         self.time = 0
 
     def __validate_send(self, name_port):
+        error_type = 0; device = None
+        _, port = name_port.split('_')
         for host in self.hosts:
             if host.name + "_1" == name_port:
-                if(host.)
-                return True
+                if name_port in self.connections.keys() and self.connections[name_port] != None:
+                    if(host.port.status == Objs.Status.Null):
+                        device = host
+                    else : error_type = 5
+                else : error_type = 
+                    
+        if(device == None):
+            for hub in self.hubs:
+                if hub.name + "_{}".format(port) == name_port:
+                    device = hub, error_type = 4
+        
+        if(device == None):
+            error_type = 2
 
-        return False
+        return error_type, device
 
     def __validate_disconnection(self, name_port):
         error_type = 0; device = None
@@ -177,9 +190,29 @@ class Device_handler:
     #     return False
 
     
-    def send(self, origin_pc : Objs.Computer, info):
-        if self.__validate_send(origin_pc):
-            pass
-
-        else : print("Wether the device is not a host, or the host currently doesnt exist")   
+    def send(self, origin_pc, data):
+        #error_type 3 => the port is not connected
+        #error_type 4 => the device must be a host
+        #error_type 5 => the host is busy (Collision)
         
+        device = None; error_type = 0
+        device, error_type = self.__validate_send(origin_pc)
+
+        if(error_type == 0): #El send es valido
+            device.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+            destination_device, destination_port = self.connections[origin_pc]
+            self.__spread_data(device, data)   
+
+    
+    def __spread_data(self, origin, data, origin_port = None):
+        
+        if isinstance(origin, Objs.Computer):
+            origin.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+           
+            self.__spread_data(device, data, destiny_port)
+
+
+        else :
+            
+
+      
