@@ -90,21 +90,6 @@ class Device_handler:
             name2, port2 = self.connections[name_port]
             del self.connections[name_port]
             del self.connections[f"{name2}_{port2}"]
-            
-    #def disconnect(self, port):
-    #    if port not in Objs.ports.keys():
-    #        print(f"This port {port} not exist")
-    #    else:
-    #        Objs.ports[port].disconnect()
-
-            
-    # def __disconnect_pc(self, pc : Objs.Computer):
-    #     if pc.connections[0] != None:
-    #         pc.connections[0] = None
-    #         return True
-        
-    #     return False
-
 
     
     def send(self, origin_pc, data):
