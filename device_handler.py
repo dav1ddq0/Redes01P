@@ -1,19 +1,9 @@
 from os import name, stat
 import Objs
 
-<<<<<<< HEAD
 errors = {1: "is busy", 2: "does not exist", 3: "is free"}
 
 
-=======
-errors = {  1 : "is free",
-            2 : "does not exist",
-            3 : "is not free",
-            4 : "the device must be a host",
-            5 : "host busy (collision)",
-            6 : "has a cable connected, but its other endpoint is not connected to another device"
-        }
->>>>>>> 8cfa6c7a73f9a0c35aaa07b2928df528c14d9511
 class Device_handler:
     @property
     def hosts(self):
@@ -46,13 +36,6 @@ class Device_handler:
         return True
 
     def __validate_disconnection(self, name_port):
-<<<<<<< HEAD
-        if name_port not in Objs.ports:
-             print(f"port {name_port} {errors[2]}")
-             return False
-        elif name_port not in self.connections:
-                print(f"port {name_port} {errors[3]}")
-=======
         port = Objs.ports[name_port]
         
         if name_port not in Objs.ports.keys():
@@ -61,28 +44,10 @@ class Device_handler:
 
         elif not port.cable_connected:
                 print(f"port {name_port} {errors[1]}")
->>>>>>> 8cfa6c7a73f9a0c35aaa07b2928df528c14d9511
                 return False
 
         return True        
     
-<<<<<<< HEAD
-    def __validate_connection(self, name_port1,name_port2): #Private method to identify wether a device is a hub or a host
-        if name_port1 not in Objs.ports_d.keys():
-            print(f"port {name_port1} {errors[2]}")
-            return False
-        elif name_port2 not in Objs.ports_d.keys():
-            print(f"port {name_port2} {errors[2]}")
-            return False
-        else:
-            port1= Objs.ports_d[name_port1]
-            port2= Objs.ports_d[name_port2]
-            if  port1.cable_connected:
-                print(f"Port{name_port1} {errors[1]}")
-                return False
-            elif port2.cable_connected:    
-                print(f"Port{name_port2} {errors[1]}")
-=======
     def __validate_connection(self, name_port): #Private method to identify wether a device is a hub or a host
         port = Objs.ports[name_port]
 
@@ -92,7 +57,6 @@ class Device_handler:
 
         elif  port.cable_connected:
                 print(f"Port{name_port} {errors[3]}")
->>>>>>> 8cfa6c7a73f9a0c35aaa07b2928df528c14d9511
                 return False
 
         return True
@@ -107,25 +71,6 @@ class Device_handler:
 
     def setup_connection(self, name_port1, name_port2):
 
-<<<<<<< HEAD
-        if self.__validate_connection(name_port1, name_port2):
-            port1 = Objs.ports_d(name_port1)
-            port2 = Objs.ports_d(name_port2)
-            self.connections[name_port1] = name_port2
-            self.connections[name_port2] = name_port1
-            port1.cable_connected = True
-            port2.cable_connected = False
-        
-
-    
-    def shutdown_connection(self, name_port):
-        if self.__validate_disconnection(name_port):
-            port1 = Objs.ports_d[name_port]
-            port1.cable_connected = False
-            name_port2 = self.connections[name_port]
-            del self.connections[name_port]
-            del self.connections[name_port2]
-=======
         if self.__validate_connection(name_port1) and self.__validate_connection(name_port2):
             port1 = Objs.ports[name_port1]
             port2 = Objs.ports[name_port2]
@@ -155,19 +100,9 @@ class Device_handler:
     #         return True
         
     #     return False
->>>>>>> 8cfa6c7a73f9a0c35aaa07b2928df528c14d9511
 
 
     
-<<<<<<< HEAD
-    def send(self, origin_pc : Objs.Computer, info):
-        pass
-        # if self.__validate_send(origin_pc):
-        #     pass
-        #
-        # else : print("Wether the device is not a host, or the host currently doesnt exist")
-        
-=======
     def send(self, origin_pc, data):
 
         if self.__validate_send(origin_pc): #El send es valido
@@ -196,4 +131,3 @@ class Device_handler:
             
 
       
->>>>>>> 8cfa6c7a73f9a0c35aaa07b2928df528c14d9511
