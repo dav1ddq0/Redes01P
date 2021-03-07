@@ -30,22 +30,7 @@ def main():
 
     for line in f.readlines():
         instruction, args2 = myParser.parse(line)
-        if(instruction == "create hub" or instruction == "create host"):
-            caller[instruction](args2)
+        caller[instruction](args2)
 
-        if(instruction == "connect"):
-            error_type_port1, error_type_port2 = caller[instruction](args2)
-            if(error_type_port1 and error_type_port2):
-                print(f"{args2[0]} {errors[error_type_port1]}")
-                print(f"{args2[1]} {errors[error_type_port2]}")
-
-        if(instruction == "disconnect"):
-            error_type = caller[instruction](args2)
-            if(error_type):
-                print(f"{args2[0]} {errors[error_type]}")
-
-        # if(instruction == "send"):
-        #     pass
-            
 if __name__== "__main__":
     main()
