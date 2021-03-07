@@ -1,28 +1,5 @@
 from enum import Enum
 
-<<<<<<< HEAD
-ports_d = {}
-
-
-class Status(Enum):
-    Host = 1
-    Hub = 2
-class Port:
-    def __init__(self, name: str, parent,type :Status):
-        self.name = name
-        self.cable = None
-        self.cable_connected = False
-        self.next = None
-        self.parent = parent
-        self.type = type
-        self.time=0
-
-    def Stopwatcher(self):
-        if self.time !=0:
-            self.time -=1
-            if self.time ==0:
-                self.cable = None
-=======
 ports = {}
 
 class Status(Enum):
@@ -43,7 +20,6 @@ class Port:
     #        self.time -=1
     #        if time ==0:
     #            self.data=None
->>>>>>> 8cfa6c7a73f9a0c35aaa07b2928df528c14d9511
                
 
 class Computer:

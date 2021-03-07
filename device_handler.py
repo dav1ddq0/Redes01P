@@ -1,9 +1,13 @@
 from os import name, stat
 import Objs
 
-errors = {1: "is busy", 2: "does not exist", 3: "is free"}
-
-
+errors = {  1 : "is free",
+            2 : "does not exist",
+            3 : "is not free",
+            4 : "the device must be a host",
+            5 : "host busy (collision)",
+            6 : "has a cable connected, but its other endpoint is not connected to another device"
+        }
 class Device_handler:
     @property
     def hosts(self):
