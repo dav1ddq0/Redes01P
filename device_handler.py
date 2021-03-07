@@ -90,47 +90,31 @@ class Device_handler:
             name2, port2 = self.connections[name_port]
             del self.connections[name_port]
             del self.connections[f"{name2}_{port2}"]
-            
-    #def disconnect(self, port):
-    #    if port not in Objs.ports.keys():
-    #        print(f"This port {port} not exist")
-    #    else:
-    #        Objs.ports[port].disconnect()
-
-            
-    # def __disconnect_pc(self, pc : Objs.Computer):
-    #     if pc.connections[0] != None:
-    #         pc.connections[0] = None
-    #         return True
-        
-    #     return False
-
-    # def __disconnect_hub(self, hub : Objs.Hub, hub_port : int):
-    #     if hub.connections[hub_port] != None:
-    #         hub.connections[hub_port] = None
-    #         return True
-
-    #     return False
 
     
     def send(self, origin_pc, data):
 
         if self.__validate_send(origin_pc): #El send es valido
             device = Objs.ports[origin_pc].parent
-            device.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+            device.Log(data, "send")
+            device.port.cable_data = data
             destination_device, destination_port = Objs.ports[self.connections[origin_pc]].parent, Objs.ports[self.connections[origin_pc]]
             self.__spread_data(destination_device, data, Objs.ports[destination_port])   
 
     
+    
     def __spread_data(self, device, data, data_incoming_port):
         
         if isinstance(device, Objs.Computer):
-            device.port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
+            device.port.cable = data
+            device.Log(data, "send")
 
         elif isinstance(device, Objs.Hub):
+            device.Log(data, "receive", data_incoming_port.name)
             for port in device.ports:
-                port.status = Objs.Status.Zero if data == '0' else Objs.Status.One
-                if(port != data_incoming_port):
+                device.Log(data, "send", port.name)
+                port.cable_data = data
+                if port != data_incoming_port:
                     next_device, next_port = Objs.ports[self.connections[port.name]].parent, Objs.ports[self.connections[port.name]]
                     self.__spread_data(next_device, data, next_port)
                     
