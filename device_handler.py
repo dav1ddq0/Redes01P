@@ -125,9 +125,9 @@ class Device_handler:
             if host.time_remaining == 0:
                 nex_bit = host.Next_Bit()
                 if nex_bit == None:
-                    host_sending.remove(host)
+                    self.host_sending.remove(host)
                 else:
-                    self.send_bit(host.port,nex_bit)
+                    self.send_bit(host.port.name,nex_bit)
 
 
     def send(self, origin_pc, data, time):

@@ -1,1 +1,7 @@
 7 pc2_1 receive 0
+10 pc2_1 receive 0
+13 pc2_1 receive 1
+16 pc2_1 receive 0
+19 pc2_1 receive 0
+22 pc2_1 receive 1
+25 pc2_1 receive 0

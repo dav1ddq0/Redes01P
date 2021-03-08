@@ -1,1 +1,7 @@
 7 pc1_1 send 0
+10 pc1_1 send 0
+13 pc1_1 send 1
+16 pc1_1 send 0
+19 pc1_1 send 0
+22 pc1_1 send 1
+25 pc1_1 send 0
