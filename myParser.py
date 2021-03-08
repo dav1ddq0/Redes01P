@@ -57,6 +57,7 @@ def create_parse(args : list, time: int):
         else : print("Invalid amount of arguments")
 
 
+
 def connect_parse(args: list, time: int):
 
     if args[1].find('_') != -1 and args[2].find('_') != -1:
