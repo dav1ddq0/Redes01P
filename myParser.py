@@ -1,8 +1,8 @@
 caller ={
-        "create" : lambda args : create_parse(args) ,
-        "connect" : lambda args : connect_parse(args),
-        "send" : lambda args : send_parse(args),
-        "disconnect" : lambda args :  disconnect_parse(args)
+        "create" : lambda args, time : create_parse(args, time) ,
+        "connect" : lambda args, time : connect_parse(args, time),
+        "send" : lambda args, time : send_parse(args, time),
+        "disconnect" : lambda args, time :  disconnect_parse(args)
         }
 
 # parse de linne of the file
@@ -11,7 +11,9 @@ def parse(line : str):
     line = line.replace('\n','')
     #divide the line in tokens
     codes = line.split(' ')
-    instruction_time = 0
+    
+    instruction_time = 0 
+
     try :
         instruction_time = int(codes[0])
     except ValueError:
@@ -23,18 +25,18 @@ def parse(line : str):
         print(f"{codes[0]} is invalid command")
         return
     else:
-        return caller[codes[0]]
+        return caller[codes[0]](codes, instruction_time)
 
 def __check_binary(string):
     s = set(string)
-    p = {0 , 1}
+    p = {'0' , '1'}
 
-    if s == p or p == {'0'} or p == {'1'}:
+    if s == p or s == {'0'} or s == {'1'}:
         return True
 
     return False
 
-def create_parse(args : list):
+def create_parse(args : list, time: int):
     if args[1] == "hub":
         ports_amount = 0
         try :
@@ -42,18 +44,21 @@ def create_parse(args : list):
         except ValueError:
             print("Invalid parameter")
         if len(args) == 4:
-                # hub,name,ports_amount
-                return args[1], args[2], ports_amount
-        else : print("Invalid amount of arguments")
+                # hub,name,ports_amount,time
+                return args[1], [args[2], ports_amount, time]
+        else: 
+            print("Invalid amount of arguments")
+
         
     elif args[1] == "host":
         if len(args) == 3:
-            return args[1], args[2]
+            return args[1], [args[2], time]
             
         else : print("Invalid amount of arguments")
 
 
-def connect_parse(args : list):
+
+def connect_parse(args: list, time: int):
 
     if args[1].find('_') != -1 and args[2].find('_') != -1:
             _, device1_port = args[1].split('_')
@@ -67,10 +72,10 @@ def connect_parse(args : list):
             
             if len(args) == 3:
                 # connect,port1,port2
-                return args[0], args[1], args[2]
+                return args[0], [args[1], args[2], time]
             else : print("Invalid amount of arguments")
 
-def send_parse(args:list):
+def send_parse(args: list, time: int):
     if args[1].find('_'):
         device_name, device_port = args[1].split('_')
         try:
@@ -79,11 +84,11 @@ def send_parse(args:list):
             print("Invalid parameters")
         if len(args) == 3:
             if __check_binary(args[2]):
-                return args[0], args[1], args[2]
+                return args[0], [args[1], args[2], time]
             else : print("The data to send must be a binary code")
 
 # sintax error of insr time disconnect
-def disconnect_parse(args:list):
+def disconnect_parse(args: list,time: int):
     if args[1].find('_'):
         _, device_port = args[1].split('_')
             
@@ -93,7 +98,7 @@ def disconnect_parse(args:list):
             print("Invalid parameters")
         if len(args) == 2: 
             # disconnect,port
-            return args[0], args[1]
+            return args[0], [args[1], time]
         else : print("Invalid amount of arguments")
     else:
         print("Invalid format")    
