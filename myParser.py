@@ -44,9 +44,11 @@ def create_parse(args : list, time: int):
         except ValueError:
             print("Invalid parameter")
         if len(args) == 4:
-                # hub,name,ports_amount
+                # hub,name,ports_amount,time
                 return args[1], [args[2], ports_amount, time]
-        else : print("Invalid amount of arguments")
+        else: 
+            print("Invalid amount of arguments")
+
         
     elif args[1] == "host":
         if len(args) == 3:
