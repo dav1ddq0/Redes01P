@@ -70,12 +70,12 @@ class Device_handler:
     def finished_network_transmission(self):
         while len(self.host_sending) > 0:
             self.time += 1
-            self.update_host_sending()
+            self.update_devices()
 
     def upgrade_network_state(self, time: int):
-        while self.time < time and len(self.host_sending) > 0:
+        while self.time < time:
             self.time += 1
-            self.update_host_sending()
+            self.update_devices()
         self.time = time
 
     def create_pc(self, name: str, time: int):
@@ -110,16 +110,24 @@ class Device_handler:
             del self.connections[name_port]
             del self.connections[f"{name2}_{port2}"]
 
-    def update_host_sending(self):
-        for host in self.host_sending:
+    def update_devices(self):
+        for host in self.hosts:
             host.Stopwatcher()
+            if host.time_remaining == 0:
+                host.port.cable_data = None
+
+        for hub in self.hubs:
+            hub.Stopwatcher()
+            if hub.time_remaining == 0:
+                hub.CleanPorts()
+        
+        for host in self.host_sending:
             if host.time_remaining == 0:
                 nex_bit = host.Next_Bit()
                 if nex_bit == None:
-                    self.host_sending.remove(host)
+                    host_sending.remove(host)
                 else:
-                    self.send_bit(host.port.name, nex_bit)
-
+                    self.send_bit(host.port,nex_bit)
 
 
     def send(self, origin_pc, data, time):

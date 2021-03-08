@@ -1,3 +1,1 @@
 7 pc1_1 send 0
-10 pc1_1 send 1
-13 pc1_1 send 0

@@ -21,7 +21,6 @@ class Port:
 class Computer:
     def __init__(self, name:str) -> None:
         self.name = name
-        self.connections = [None]*1
         portname = f"{name}_1"
         port = Port(portname, self)
         ports[portname] = port
@@ -29,6 +28,7 @@ class Computer:
         self.file = f"{name}.txt"
         self.data = None
         self.time_remaining = 0
+        self.sending=False
         f = open(self.file, 'w')
         f.close()
     
@@ -61,6 +61,7 @@ class Hub:
         self.connections = [None]*ports_amount
         self.file = f"{name}.txt"
         self.ports = []  # instance a list of ports
+        self.time_remaining = 0 
         for i in range(ports_amount):
             portname = f"name_{i+1}"
             port = Port(portname, self)
@@ -69,6 +70,14 @@ class Hub:
         #make the hub file
         f = open(self.file, 'w')
         f.close()
+
+    def CleanPorts(self):
+        for port in self.ports:
+            port.cable_data=None
+
+    def Stopwatcher(self):
+        if self.time_remaining != 0:
+            self.time_remaining -= 1  
 
     def UpdateFile(self,  message):
         f=open(self.file,'a')
