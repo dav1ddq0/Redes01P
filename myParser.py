@@ -1,7 +1,7 @@
 caller ={
         "create" : lambda args, time : create_parse(args, time) ,
         "connect" : lambda args, time : connect_parse(args, time),
-        "send" : lambda args, time : send_parse(args),
+        "send" : lambda args, time : send_parse(args, time),
         "disconnect" : lambda args, time :  disconnect_parse(args)
         }
 
@@ -29,9 +29,9 @@ def parse(line : str):
 
 def __check_binary(string):
     s = set(string)
-    p = {0 , 1}
+    p = {'0' , '1'}
 
-    if s == p or p == {'0'} or p == {'1'}:
+    if s == p or s == {'0'} or s == {'1'}:
         return True
 
     return False

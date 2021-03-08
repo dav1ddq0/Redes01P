@@ -24,7 +24,7 @@ class Computer:
         self.connections = [None]*1
         portname = f"{name}_1"
         port = Port(portname, self)
-        ports["portname"]= port
+        ports[portname] = port
         self.port = port
         self.file = f"{name}.txt"
         self.data = None
@@ -33,24 +33,24 @@ class Computer:
         f.close()
     
     def UpdateFile(self, message):
-        f = open(self.file, 'w')
+        f = open(self.file, 'a')
         f.write(message)
         f.close()
     
     def Log(self, data, action, time=0):
-        message = f"{time} {self.port} {action} {data}"
+        message = f"{time} {self.port.name} {action} {data}\n"
         self.UpdateFile(message)
 
     def Stopwatcher(self):
         if self.time_remaining != 0:
-            self.time -= 1    
+            self.time_remaining -= 1    
 
 
     def Next_Bit(self):
         n=len(self.data)
         if n > 0:
             next = self.data[n-1]
-            self.data = self.data[0:n-2]
+            self.data = self.data[0:n-1]
             self.time_remaining=transmition_time
             return next
         return None    
@@ -71,11 +71,11 @@ class Hub:
         f.close()
 
     def UpdateFile(self,  message):
-        f=open(self.file,'w')
+        f=open(self.file,'a')
         f.write(message)
         f.close()    
 
     def Log(self, data, action, port, time=0):
-        message = f"{time} {port} {action} {data}"
+        message = f"{time} {self.port.name} {action} {data}\n"
         self.UpdateFile(message)
 

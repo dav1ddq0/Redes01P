@@ -1,0 +1,3 @@
+7 pc2_1 receive 0
+10 pc2_1 receive 1
+13 pc2_1 receive 0

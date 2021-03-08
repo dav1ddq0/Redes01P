@@ -1,3 +1,4 @@
 5 create host pc1
 6 create host pc2
-
+6 connect pc1_1 pc2_1
+7 send pc1_1 010

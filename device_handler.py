@@ -22,13 +22,13 @@ class Device_handler:
         self.time = 0
 
     def __validate_send(self, name_port):
+        if name_port not in Objs.ports.keys():
+            print(f"port {name_port} {errors[2]}")
+            return False
+
         port = Objs.ports[name_port]
         if not isinstance(port.parent, Objs.Computer):
             print(f"port {name_port} {errors[4]}")
-            return False
-
-        elif name_port not in Objs.ports.keys():
-            print(f"port {name_port} {errors[2]}")
             return False
 
         elif not port.cable_connected:
@@ -66,6 +66,11 @@ class Device_handler:
                 return False
 
         return True
+
+    def finished_network_transmission(self):
+        while len(self.host_sending) > 0:
+            self.time += 1
+            self.update_host_sending()
 
     def upgrade_network_state(self, time: int):
         while self.time < time and len(self.host_sending) > 0:
@@ -109,23 +114,24 @@ class Device_handler:
         for host in self.host_sending:
             host.Stopwatcher()
             if host.time_remaining == 0:
-                nex_bit = host.send()
+                nex_bit = host.Next_Bit()
                 if nex_bit == None:
                     self.host_sending.remove(host)
                 else:
-                    self.send_bit(self, host.port, nex_bit)
+                    self.send_bit(host.port.name, nex_bit)
 
 
 
-    def send(self, origin_pc, data):
+    def send(self, origin_pc, data, time):
         self.upgrade_network_state(time)
 
-        if self.__validate_send_bit(origin_pc):  # El send es valido
+        if self.__validate_send(origin_pc):  # El send es valido
             host = Objs.ports[origin_pc].parent
             host.time_remaining = Objs.transmition_time
             self.host_sending.append(host)
-            nex_bit = host.send()
-            self.send_bit(self, origin_pc, nex_bit)
+            host.data=data
+            nex_bit = host.Next_Bit()
+            self.send_bit(origin_pc, nex_bit)
 
             
 
@@ -133,8 +139,9 @@ class Device_handler:
         device = Objs.ports[origin_pc].parent
         device.Log(data, "send",self.time)
         device.port.cable_data = data
-        destination_device, destination_port = Objs.ports[self.connections[origin_pc]].parent, Objs.ports[self.connections[origin_pc]]
-        self.__spread_data(destination_device, data, Objs.ports[destination_port])
+        destination_device = Objs.ports[self.connections[origin_pc]].parent
+        destination_port = Objs.ports[self.connections[origin_pc]]
+        self.__spread_data(destination_device, data, destination_port)
 
 
 
@@ -142,7 +149,7 @@ class Device_handler:
 
         if isinstance(device, Objs.Computer):
             device.port.cable_data = data
-            device.Log(data, "send",self.time)
+            device.Log(data, "receive",self.time)
 
         elif isinstance(device, Objs.Hub):
             device.Log(data, "receive", data_incoming_port.name, self.time)
