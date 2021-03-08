@@ -58,12 +58,12 @@ class Hub:
         f = open(self.file, 'w')
         f.close()
 
-    def UpdateFile(self, name, message):
-        f=open(self.file,'w')
+    def UpdateFile(self, message):
+        f = open(self.file,'w')
         f.write(message)
         f.close()    
 
-    def Log(self, data, action, port, time=0):
+    def Log(self, data, action, port, time = 0):
         message = f"{time} {port} {action} {data}"
         self.UpdateFile(message)
 

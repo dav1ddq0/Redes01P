@@ -2,11 +2,7 @@ import sys, argparse
 import device_handler as dh
 import myParser
 
-# dicc contains every type of error possible in connection,desconnection port
-errors = {  1 : "port is busy",
-            2 : "port does not exist",
-            3 : "port is free"
-        }
+
 handler = dh.Device_handler()        
 # dicc that func like a launcher to the principal methods
 caller ={

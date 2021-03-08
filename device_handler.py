@@ -106,7 +106,7 @@ class Device_handler:
     def __spread_data(self, device, data, data_incoming_port):
         
         if isinstance(device, Objs.Computer):
-            device.port.cable = data
+            device.port.cable_data = data
             device.Log(data, "send")
 
         elif isinstance(device, Objs.Hub):
