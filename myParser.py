@@ -2,7 +2,7 @@ caller ={
         "create" : lambda args, time : create_parse(args, time) ,
         "connect" : lambda args, time : connect_parse(args, time),
         "send" : lambda args, time : send_parse(args, time),
-        "disconnect" : lambda args, time :  disconnect_parse(args)
+        "disconnect" : lambda args, time :  disconnect_parse(args, time)
         }
 
 # parse de linne of the file
