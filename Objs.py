@@ -7,16 +7,20 @@ class Status(Enum):
     One = 1
     Zero = 0
 
+
+class Cable:
+    def __init__(self):
+        self.data = None # 0 1 None son los tres estados en los que puede estar el cable
+        # puerto de donde se esta enviando la informacion
+        # es muy util para cuando haya que desconectar
+        self.port = None
+
 class Port:
     def __init__(self, name:str, parent):
         self.name = name
-        self.cable_data = None
-        self.cable_connected = False
+        self.cable = None
         self.parent = parent
         self.time = 0
-
-
-
 
 class Computer:
     def __init__(self, name:str) -> None:
@@ -63,7 +67,7 @@ class Hub:
         self.ports = []  # instance a list of ports
         self.time_remaining = 0 
         for i in range(ports_amount):
-            portname = f"name_{i+1}"
+            portname = f"{name}_{i+1}"
             port = Port(portname, self)
             self.ports.append(port)
             ports[portname] = port
@@ -71,9 +75,6 @@ class Hub:
         f = open(self.file, 'w')
         f.close()
 
-    def CleanPorts(self):
-        for port in self.ports:
-            port.cable_data=None
 
     def Stopwatcher(self):
         if self.time_remaining != 0:
@@ -85,6 +86,6 @@ class Hub:
         f.close()    
 
     def Log(self, data, action, port, time=0):
-        message = f"{time} {self.port.name} {action} {data}\n"
+        message = f"{time} {port} {action} {data}\n"
         self.UpdateFile(message)
 

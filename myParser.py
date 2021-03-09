@@ -76,16 +76,10 @@ def connect_parse(args: list, time: int):
             else : print("Invalid amount of arguments")
 
 def send_parse(args: list, time: int):
-    if args[1].find('_'):
-        device_name, device_port = args[1].split('_')
-        try:
-            device1_port = int(device_port)
-        except ValueError:
-            print("Invalid parameters")
-        if len(args) == 3:
-            if __check_binary(args[2]):
-                return args[0], [args[1], args[2], time]
-            else : print("The data to send must be a binary code")
+    if len(args) == 3:
+        if __check_binary(args[2]):
+            return args[0], [args[1], args[2], time]
+        else : print("The data to send must be a binary code")
 
 # sintax error of insr time disconnect
 def disconnect_parse(args: list,time: int):
