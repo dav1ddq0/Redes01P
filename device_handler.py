@@ -6,7 +6,7 @@ errors = {  1 : "is free",
             2 : "does not exist",
             3 : "is not free",
             4 : "the device must be a host",
-            5 : "host busy (collision)",
+            5 : "network busy (collision)",
             6 : "has a cable connected, but its other endpoint is not connected to another device"
         }
 class Device_handler:
@@ -130,14 +130,14 @@ class Device_handler:
             host.time_remaining = Objs.transmition_time
             self.host_sending.append(host)
             host.data=data
-            nex_bit = host.Next_Bit()
-            self.send_bit(origin_pc, nex_bit)
+            next_bit = host.Next_Bit()
+            self.send_bit(origin_pc, next_bit)
 
             
 
     def send_bit(self, origin_pc, data):
         device = Objs.ports[origin_pc].parent
-        device.Log(data, "send",self.time)
+        device.Log(data, "send", self.time)
         device.port.cable_data = data
         destination_device = Objs.ports[self.connections[origin_pc]].parent
         destination_port = Objs.ports[self.connections[origin_pc]]

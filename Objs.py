@@ -21,7 +21,6 @@ class Port:
 class Computer:
     def __init__(self, name:str) -> None:
         self.name = name
-        self.connections = [None]*1
         portname = f"{name}_1"
         port = Port(portname, self)
         ports[portname] = port
@@ -45,20 +44,18 @@ class Computer:
         if self.time_remaining != 0:
             self.time_remaining -= 1    
 
-
     def Next_Bit(self):
-        n=len(self.data)
+        n = len(self.data)
         if n > 0:
             next = self.data[n-1]
             self.data = self.data[0:n-1]
-            self.time_remaining=transmition_time
+            self.time_remaining = transmition_time
             return next
         return None    
         
 class Hub:
     def __init__(self, name: str, ports_amount: int) -> None:
         self.name = name
-        self.connections = [None]*ports_amount
         self.file = f"{name}.txt"
         self.ports = []  # instance a list of ports
         for i in range(ports_amount):
@@ -71,7 +68,7 @@ class Hub:
         f.close()
 
     def UpdateFile(self,  message):
-        f=open(self.file,'a')
+        f = open(self.file,'a')
         f.write(message)
         f.close()    
 
