@@ -50,7 +50,7 @@ class Device_handler:
              print(f"port {name_port} {errors[2]}")
              return False
 
-        elif not port.cable == None:
+        elif port.cable == None:
                 print(f"port {name_port} {errors[1]}")
                 return False
 
@@ -99,7 +99,7 @@ class Device_handler:
             port2 = Objs.ports[name_port2]
             device1 = port1.parent
             device2 = port2.parent
-            if device1 == device 2 or port1 == port2:
+            if device1 == device2 or port1 == port2:
                 print("Ports of the same device is not possible connected")
                 
             else:
@@ -108,6 +108,8 @@ class Device_handler:
                 newcable = Objs.Cable()
                 port1.cable = newcable
                 port2.cable = newcable
+                # si los dispositvos pertencientes a los puertos estan transmitiendo informacion a la vez
+                #
                 if device1.bit_sending != None and device2.bit_sending != None:
                     # en este caso de forma aleatoria se decide que informacion se mantendra en transmision
                     # y cual se pierde
@@ -118,6 +120,7 @@ class Device_handler:
                     else:
                         port2.cable = device1.bit_sending
                         self.__spread_data(device1, device2.bit_sending, port1)
+
                 elif device1.bit_sending != None:
                         port1.cable = device1.bit_sending
                         self.__spread_data(device2, device1.bit_sending, port2)

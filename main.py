@@ -14,7 +14,7 @@ caller ={
         "host" : lambda args : handler.create_pc(args[0], args[1]),
         "connect": lambda args : handler.setup_connection(args[0],args[1], args[2]),
         "send": lambda args : handler.send(args[0], args[1], args[2]),
-        "disconnect": lambda args :  handler.shutdown_connection(args[0], args[1]. args[2])
+        "disconnect": lambda args :  handler.shutdown_connection(args[0], args[1])
         }
 
 # main :D

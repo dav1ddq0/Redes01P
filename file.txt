@@ -5,4 +5,4 @@
 7 connect hub1_2 pc2_1
 7 send pc1 0100100111
 13 send pc2 010
-14 disconnect hub1_2 
+14 disconnect hub1_2

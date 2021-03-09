@@ -5,14 +5,15 @@ caller ={
         "disconnect" : lambda args, time :  disconnect_parse(args, time)
         }
 
+
+
 # parse de linne of the file
 def parse(line : str):
     #remove the line jump
     line = line.replace('\n','')
     #divide the line in tokens
-    codes = line.split(' ')
     
-    instruction_time = 0 
+    codes = line.split(' ')
 
     try :
         instruction_time = int(codes[0])
