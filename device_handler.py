@@ -266,7 +266,8 @@ class Device_handler:
     def __spread_data(self, device, data, data_incoming_port):
 
         if isinstance(device, Objs.Computer):
-            if device.bit_sending != None:
+            # en caso que la informacion llegue a una pc que deberia de estar transmitiendo
+            if device.bit_sending != None and not device.stopped:
                 device.Log(data, "receive", self.time, True)
                 device.bit_sending = None
             else:
