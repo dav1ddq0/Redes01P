@@ -140,6 +140,7 @@ class Device_handler:
         # en caso que llegue a una PC es porque no tengo
         # que seguir verificando conexiones muertas pues la pc solo puede enviar o recibir 
         if isinstance(device, Objs.Computer):
+            device.port.data = None
             return
     
         elif isinstance(device, Objs.Hub):
@@ -176,6 +177,16 @@ class Device_handler:
         for host in self.host_sending:
             host.Stopwatcher()
             if host.time_remaining == 0:
+                host.bit_sending = None
+                
+                if host.port.cable != None:
+                    host.port.cable.data = None
+                
+                if host.port.name in self.connections.keys():
+                    portname2 = self.connections[host.port.name]
+                    port2 = Objs.ports[portname2]
+                    self.walk_clean_data_cable(port2.parent)
+                    
                 nex_bit = host.Next_Bit()
                 if nex_bit == None:
                     if host.data_pending.qsize() > 0:
@@ -186,13 +197,11 @@ class Device_handler:
 
                     else:
                         self.host_sending.remove(host)
-                        host.port.cable.data = None
-                        if host.port.name in self.connections.keys():
-                            portname2 = self.connections[host.port.name]
-                            port2 = Objs.ports[portname2]
-                            self.walk_clean_data_cable(port2.parent)
+                        
+                        
                 else:
-                    self.send_bit(host,nex_bit)
+                    if host.port.cable != None:          
+                        self.send_bit(host,nex_bit)
 
 
     def send(self, origin_pc, data, time):
@@ -202,6 +211,7 @@ class Device_handler:
             host = Objs.ports[origin_pc+'_1'].parent
             # en caso que la pc este transmitiendo otra informacion
             if host.data != None:
+                # agrego esa nueva informacion a una cola de datos sin enviar
                 host.data_pending.put(data)
             else:
                 host.time_remaining = Objs.transmition_time
