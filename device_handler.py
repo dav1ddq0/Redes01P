@@ -20,6 +20,7 @@ class Device_handler:
         self.connections = {}
         self.host_sending = []
         self.time = 0
+        self.transmition_time = 3
 
     def __validate_send(self, host):
 
@@ -175,20 +176,34 @@ class Device_handler:
  
     def update_devices(self):    
         for host in self.host_sending:
+            # en caso que el host no haya podido enviar una informacion previamente producto de una colision
+            # por la forma del carrier senses el va a esperar un tiempo aleatorio entre 4 y 10ms para volver
+            # a intentar enviar esa informacion
+            if host.stopped:
+                host.time_stopped -=1
+                if host.time_stopped == 0:
+                    # vuelve a intentar enviar el bit que habia fallado previamente
+                    self.send_bit(host,host.bit_sending)
+
             host.Stopwatcher()
-            if host.time_remaining == 0:
+            
+            elif host.bit_sending != None host.time_remaining == 0:
                 host.bit_sending = None
-                
-                if host.port.cable != None:
-                    host.port.cable.data = None
-                
-                if host.port.name in self.connections.keys():
-                    portname2 = self.connections[host.port.name]
-                    port2 = Objs.ports[portname2]
-                    self.walk_clean_data_cable(port2.parent)
-                    
                 nex_bit = host.Next_Bit()
-                if nex_bit == None:
+                
+                if nex_bit != None:
+                    host.bit_sending = nex_bit
+
+                if host.port.cable != None:
+                    
+                
+                    if host.port.name in self.connections.keys():
+                        portname2 = self.connections[host.port.name]
+                        port2 = Objs.ports[portname2]
+                        self.walk_clean_data_cable(port2.parent)
+                    
+                    
+                    if nex_bit == None:
                     if host.data_pending.qsize() > 0:
                         # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
                         host.data = host.data_pending.get()
@@ -214,8 +229,9 @@ class Device_handler:
                 # agrego esa nueva informacion a una cola de datos sin enviar
                 host.data_pending.put(data)
             else:
-                host.time_remaining = Objs.transmition_time
-                self.host_sending.append(host)
+                
+                if host.data == None and host.bit_sending ==None:
+                    self.host_sending.append(host)
                 host.data = data
                 nex_bit = host.Next_Bit()
                 self.send_bit(host, nex_bit)
@@ -225,9 +241,24 @@ class Device_handler:
 
     def send_bit(self, origin_pc, data):
         device = origin_pc
-        if device.bit_sending != None:
+        
+        if device.port.cable.data != None:
+                # el host no puede enviar en este momento la sennal pues se esta transmitiendo informacion por el canal 
+                device.stopped = True
+                # aumenta la cantidad de intentos fallidos
+                device.failed_attempts += 1 
+                # notifica que hubo una colision y la informacion no pudo enviarse
                 device.Log(data, "send", self.time, True)
+                # el rango se duplica en cada intento fallido
+                if device.failed_attempts < 16:
+                    nrand =  random.randint(1, 2*device.failed_attempts*10)
+                    # dada una colision espero un tiempo cada vez mayor para poder volverla a enviar
+                    device.time_stopped = nrand * self.transmition_time
+                else:
+                    # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
+                    device.bit_sending = None    
         else:
+            host.time_remaining = self.transmition_time
             device.bit_sending = data
             device.port.cable.data = data
             device.Log(data, "send",self.time)
