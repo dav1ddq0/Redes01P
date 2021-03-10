@@ -1,6 +1,4 @@
 7 pc2_1 receive 1 ok
-10 pc2_1 receive 1 ok
-13 pc2_1 receive 1 ok
-13 pc2_1 send 0 ok
-16 pc2_1 send 1 collision
-16 pc2_1 send 1 ok
+10 pc2_1 send 1 ok
+13 pc2_1 receive 0 collision
+13 pc2_1 send 1 ok

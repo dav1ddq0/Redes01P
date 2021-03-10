@@ -74,7 +74,11 @@ def connect_parse(args: list, time: int):
             if len(args) == 3:
                 # connect,port1,port2
                 return args[0], [args[1], args[2], time]
-            else : print("Invalid amount of arguments")
+            else : 
+                print("Invalid amount of arguments")
+    else:
+        print("the name format of the portame is invalid")
+
 
 def send_parse(args: list, time: int):
     if len(args) == 3:

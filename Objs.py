@@ -1,5 +1,5 @@
 from enum import Enum
-
+import  queue
 ports = {}
 transmition_time = 3
 class Status(Enum):
@@ -31,6 +31,7 @@ class Computer:
         self.port = port
         self.file = f"./Hosts/{name}.txt"
         self.data = None
+        self.data_pending = queue.Queue()
         # muestra informacion sobre el bit que se esta transmitiendo cuando el host esta enviando informacion
         self.bit_sending = None
         self.time_remaining = 0

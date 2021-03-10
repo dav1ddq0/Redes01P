@@ -30,8 +30,11 @@ def main():
     f = open(filename, 'r')
 
     for line in f.readlines():
-        instruction, args2 = myParser.parse(line)
-        caller[instruction](args2)
+        try:
+            instruction, args2 = myParser.parse(line)
+            caller[instruction](args2)
+        except TypeError:
+            print("The value result of instruction and arg2  was not as expected")    
     handler.finished_network_transmission()
 if __name__== "__main__":
     main()
