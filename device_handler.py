@@ -204,19 +204,14 @@ class Device_handler:
                     
                     
                     if nex_bit == None:
-                    if host.data_pending.qsize() > 0:
-                        # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
-                        host.data = host.data_pending.get()
-                        nex_bit = host.Next_Bit()
-                        self.send_bit(host,nex_bit)
+                        if host.data_pending.qsize() > 0:
+                            # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
+                            host.data = host.data_pending.get()
+                            nex_bit = host.Next_Bit()
+                            self.send_bit(host,nex_bit)
 
-                    else:
-                        self.host_sending.remove(host)
-                        
-                        
-                else:
-                    if host.port.cable != None:          
-                        self.send_bit(host,nex_bit)
+                        else:
+                            self.host_sending.remove(host)
 
 
     def send(self, origin_pc, data, time):
