@@ -76,7 +76,7 @@ class Device_handler:
             self.update_devices()
 
     def upgrade_network_state(self, time: int):
-        while self.time < time:
+        while self.time <= time:
             self.time += 1
             self.update_devices()
         self.time = time
@@ -182,39 +182,46 @@ class Device_handler:
             if host.stopped:
                 host.time_stopped -=1
                 if host.time_stopped == 0:
+                    host.stopped = False
                     # vuelve a intentar enviar el bit que habia fallado previamente
                     self.send_bit(host,host.bit_sending)
 
-            host.Stopwatcher()
             
-            if host.bit_sending != None  and host.time_remaining == 0:
-                host.bit_sending = None
-                nex_bit = host.Next_Bit()
-                
-                if nex_bit != None:
-                    host.bit_sending = nex_bit
+            else:
+                host.Stopwatcher()
+                if host.bit_sending != None  and host.time_remaining == 0:
+                    host.bit_sending = None
+                    nex_bit = host.Next_Bit()
 
-                if host.port.cable != None:
-                    
-                
-                    if host.port.name in self.connections.keys():
-                        portname2 = self.connections[host.port.name]
-                        port2 = Objs.ports[portname2]
-                        self.walk_clean_data_cable(port2.parent)
-                    
-                    
-                    if nex_bit == None:
-                        if host.data_pending.qsize() > 0:
-                            # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
-                            host.data = host.data_pending.get()
-                            nex_bit = host.Next_Bit()
-                            self.send_bit(host,nex_bit)
+                    if nex_bit != None:
+                        host.bit_sending = nex_bit
 
+                    if host.port.cable != None:
+
+                    
+                        if host.port.name in self.connections.keys():
+                            portname2 = self.connections[host.port.name]
+                            port2 = Objs.ports[portname2]
+                            self.walk_clean_data_cable(port2.parent)
+
+
+                        if nex_bit == None:
+                            if host.data_pending.qsize() > 0:
+                                # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
+                                host.data = host.data_pending.get()
+                                
+                                nex_bit = host.Next_Bit()
+                                self.send_bit(host,nex_bit)
+
+                            else:
+                                self.host_sending.remove(host)
                         else:
-                            self.host_sending.remove(host)
+                            self.send_bit(host,nex_bit)
+                    else:
+                        host.time_remaining = self.transmition_time                
 
 
-    def send(self, origin_pc, data, time):
+    def send    (self, origin_pc, data, time):
         self.upgrade_network_state(time)
 
         if self.__validate_send(origin_pc):  # El send es valido
@@ -236,7 +243,7 @@ class Device_handler:
 
     def send_bit(self, origin_pc, data):
         device = origin_pc
-        
+        device.bit_sending = data
         if device.port.cable.data != None:
                 # el host no puede enviar en este momento la sennal pues se esta transmitiendo informacion por el canal 
                 device.stopped = True
@@ -267,11 +274,11 @@ class Device_handler:
 
         if isinstance(device, Objs.Computer):
             # en caso que la informacion llegue a una pc que deberia de estar transmitiendo
-            if device.bit_sending != None and not device.stopped:
-                device.Log(data, "receive", self.time, True)
-                device.bit_sending = None
-            else:
-                device.Log(data, "receive", self.time)
+            # if device.bit_sending != None and not device.stopped:
+            #     device.Log(data, "receive", self.time, True)
+            #     device.bit_sending = None
+            # else:
+            device.Log(data, "receive", self.time)
             
         elif isinstance(device, Objs.Hub):
             device.bit_sending = data
