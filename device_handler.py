@@ -187,7 +187,7 @@ class Device_handler:
 
             host.Stopwatcher()
             
-            elif host.bit_sending != None host.time_remaining == 0:
+            if host.bit_sending != None  and host.time_remaining == 0:
                 host.bit_sending = None
                 nex_bit = host.Next_Bit()
                 
@@ -253,7 +253,7 @@ class Device_handler:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
                     device.bit_sending = None    
         else:
-            host.time_remaining = self.transmition_time
+            device.time_remaining = self.transmition_time
             device.bit_sending = data
             device.port.cable.data = data
             device.Log(data, "send",self.time)

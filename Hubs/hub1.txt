@@ -1,3 +1,1 @@
 7 hub1_1 receive 1
-10 hub1_1 receive 0
-13 hub1_1 receive 0
