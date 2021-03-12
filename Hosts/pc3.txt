@@ -1,0 +1,2 @@
+12 pc3_1 receive 1 ok
+13 pc3_1 receive 0 ok

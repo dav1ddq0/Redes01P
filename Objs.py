@@ -1,7 +1,7 @@
 from enum import Enum
-
+import  queue
 ports = {}
-transmition_time = 3
+
 class Status(Enum):
     Null = 2
     One = 1
@@ -29,10 +29,18 @@ class Computer:
         port = Port(portname, self)
         ports[portname] = port
         self.port = port
-        self.file = f"{name}.txt"
+        self.file = f"./Hosts/{name}.txt"
         self.data = None
+        self.data_pending = queue.Queue()
+        # muestra informacion sobre el bit que se esta transmitiendo cuando el host esta enviando informacion
+        self.bit_sending = None
         self.time_remaining = 0
-        self.sending=False
+        self.sending = False
+        self.stopped = False
+        self.time_stopped = 0
+        self.failed_attempts = 0
+        # me permite conecer  si una PC esta transmitiendo o no en un momento determinado informacion
+        self.sender = False
         f = open(self.file, 'w')
         f.close()
     
@@ -41,8 +49,9 @@ class Computer:
         f.write(message)
         f.close()
     
-    def Log(self, data, action, time=0):
-        message = f"{time} {self.port.name} {action} {data}\n"
+    def Log(self, data, action, time, collison = False):
+        terminal = "collision" if collison else "ok"   
+        message = f"{time} {self.port.name} {action} {data} {terminal}\n"
         self.UpdateFile(message)
 
     def Stopwatcher(self):
@@ -54,16 +63,18 @@ class Computer:
         if n > 0:
             next = self.data[n-1]
             self.data = self.data[0:n-1]
-            self.time_remaining = transmition_time
             return next
         return None    
         
 class Hub:
     def __init__(self, name: str, ports_amount: int) -> None:
         self.name = name
-        self.file = f"{name}.txt"
+        self.connections = [None]*ports_amount
+        self.file = f"./Hubs/{name}.txt"
         self.ports = []  # instance a list of ports
-        self.time_remaining = 0 
+        # con esto se si el hub esta retrasmitiendo la informacion proveniente de un host que esta enviando info y que informacion
+        # es resulta util para detectar colisiones
+        self.bit_sending = None 
         for i in range(ports_amount):
             portname = f"{name}_{i+1}"
             port = Port(portname, self)
@@ -83,7 +94,7 @@ class Hub:
         f.write(message)
         f.close()    
 
-    def Log(self, data, action, port, time=0):
+    def Log(self, data, action, port, time):
         message = f"{time} {port} {action} {data}\n"
         self.UpdateFile(message)
 

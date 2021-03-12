@@ -5,14 +5,15 @@ caller ={
         "disconnect" : lambda args, time :  disconnect_parse(args, time)
         }
 
+
+
 # parse de linne of the file
 def parse(line : str):
     #remove the line jump
     line = line.replace('\n','')
     #divide the line in tokens
-    codes = line.split(' ')
     
-    instruction_time = 0 
+    codes = line.split(' ')
 
     try :
         instruction_time = int(codes[0])
@@ -73,7 +74,11 @@ def connect_parse(args: list, time: int):
             if len(args) == 3:
                 # connect,port1,port2
                 return args[0], [args[1], args[2], time]
-            else : print("Invalid amount of arguments")
+            else : 
+                print("Invalid amount of arguments")
+    else:
+        print("the name format of the portame is invalid")
+
 
 def send_parse(args: list, time: int):
     if len(args) == 3:
