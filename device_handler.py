@@ -38,7 +38,7 @@ class Device_handler:
             return False
 
         elif port.name not in self.connections.keys():
-            print(f"port {name_port} {errors[6]}")
+            print(f"port {port_name} {errors[6]}")
             return False
 
         return True
