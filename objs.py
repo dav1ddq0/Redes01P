@@ -16,7 +16,7 @@ class Cable:
         # es muy util para cuando haya que desconectar
 
 class Port:
-    def __init__(self, name:str, parent):
+    def __init__(self, name:str, device):
         # nombre del puerto
         self.name = name
         # con esta propiedad conozco si un cable conectado al puerto
@@ -29,7 +29,6 @@ class Host:
         self.name = name
         portname = f"{name}_1"
         port = Port(portname, self)
-        ports[portname] = port
         self.port = port
         self.file = f"./Hosts/{name}.txt"
         self.data = None
@@ -85,7 +84,6 @@ class Hub:
             portname = f"{name}_{i+1}"
             port = Port(portname, self)
             self.ports.append(port)
-            ports[portname] = port
         #make the hub file
         f = open(self.file, 'w')
         f.close()

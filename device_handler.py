@@ -71,10 +71,11 @@ class Device_handler:
 
         return True
 
-    def finished_network_transmission(self):
-        while len(self.host_sending) > 0:
+    def finished_network_transmission(self):    
+        while True:
             self.time += 1
-            self.update_devices()
+            if not self.update_devices():
+                break
 
     def upgrade_network_state(self, time: int):
         while self.time <= time:
@@ -126,9 +127,7 @@ class Device_handler:
                         self.__spread_data(device1, device2.bit_sending, port1)
                 
 
-
-
-            
+       
 
 
 
@@ -185,8 +184,8 @@ class Device_handler:
     # de esta forma se revisa si host que esta transmitiendo dejo de hacerlo y por ende toda la informacion desaparece de los cables
     # a los que pueda llegar desde el otra
  
-    def update_devices(self):    
-        for host in self.host:
+    def update_devices(self):  
+        for host in self.hosts:
             # en caso que el host no haya podido enviar una informacion previamente producto de una colision
             # por la forma del carrier senses el va a esperar un tiempo aleatorio entre 4 y 10ms para volver
             # a intentar enviar esa informacion
@@ -196,6 +195,7 @@ class Device_handler:
                     host.stopped = False
                     # vuelve a intentar enviar el bit que habia fallado previamente
                     self.send_bit(host,host.bit_sending)
+                    return True
 
             if host.transmitting:
                 host.transmitting_time +=1
@@ -218,7 +218,11 @@ class Device_handler:
                         nex_bit = host.Next_Bit()
                                                 
                     if nex_bit != None:
-                        self.send_bit(host,nex_bit)               
+                        self.send_bit(host,nex_bit)
+                    return True
+
+        return False                
+
 
 
     def send(self, origin_pc, data, time):
