@@ -132,7 +132,7 @@ class Device_handler:
 
 
     # hay que remover los datos de los cables que se quedaron desconectados del host que estaba enviando informacion
-    def walk_clean_data_cable(self, device):
+    def walk_clean_data_cable(self, device, incoming_port:objs.Port):
         # en caso que llegue a una PC es porque no tengo
         # que seguir verificando conexiones muertas pues la pc solo puede enviar o recibir 
         if isinstance(device, objs.Host):
@@ -156,12 +156,12 @@ class Device_handler:
         elif isinstance(device, objs.Hub):
             device.bit_sending = None
             for port in device.ports:
-                if port.cable != None and port.cable.data != objs.Data.Null:
+                if port.cable != None and port != incoming_port:
                     port.cable.data = objs.Data.Null
                     if port.name in self.connections.keys():
                         portname2 = self.connections[port.name]
                         port2 = self.ports[portname2]
-                        self.walk_clean_data_cable(port2.device)
+                        self.walk_clean_data_cable(port2.device,port2)
 
     def shutdown_connection(self, name_port: str, time: int):
         self.upgrade_network_state(time)
@@ -195,11 +195,11 @@ class Device_handler:
                     host.stopped = False
                     # vuelve a intentar enviar el bit que habia fallado previamente
                     self.send_bit(host,host.bit_sending)
-                    return True
+                return True
 
             if host.transmitting:
                 host.transmitting_time +=1
-                if host.transmitting_time % self.time:
+                if host.transmitting_time % self.transmition_time == 0:
                     nex_bit = host.Next_Bit()
                     if nex_bit != None:
                         host.bit_sending = nex_bit
@@ -210,7 +210,7 @@ class Device_handler:
                         portname2 = self.connections[host.port.name]
                         port2 = self.ports[portname2]
                         # limpia el camino para enviar el proximo bit
-                        self.walk_clean_data_cable(port2.device)
+                        self.walk_clean_data_cable(port2.device,port2)
 
                     if nex_bit == None and host.data_pending.qsize() > 0:
                         # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
@@ -218,8 +218,14 @@ class Device_handler:
                         nex_bit = host.Next_Bit()
                                                 
                     if nex_bit != None:
+                        if host.port.cable != None:
+                            host.port.cable.data = objs.Data.Null
                         self.send_bit(host,nex_bit)
-                    return True
+                    else:
+                        host.bit_sending = None
+                        host.transmitting = False    
+                
+                return True    
 
         return False                
 
@@ -265,6 +271,7 @@ class Device_handler:
                     device.bit_sending = None    
         else:
             device.transmitting = True
+            device.transmitting_time = 0
             device.Log(data, "send",self.time)
             # revise el object del puerto 
             destination_port = self.ports[self.connections[origin_pc.port.name]]
