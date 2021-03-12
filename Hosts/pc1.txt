@@ -1,2 +1,0 @@
-7 pc1_1 send 0 ok
-8 pc1_1 send 0 collision
