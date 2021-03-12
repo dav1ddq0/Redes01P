@@ -1,28 +1,31 @@
 from enum import Enum
 import  queue
+
 ports = {}
 
-class Status(Enum):
-    Null = 2
-    One = 1
-    Zero = 0
+class Data(Enum):
+    Null = "Null"
+    One = "1"
+    Zero = "0"
 
 
 class Cable:
     def __init__(self):
-        self.data = None # 0 1 None son los tres estados en los que puede estar el cable
+        # conozco la informacion qu esta pasando por el cable
+        self.data = Data.Null # 0 1 Null son los tres estados en los que puede estar el cable
         # puerto de donde se esta enviando la informacion
         # es muy util para cuando haya que desconectar
-        self.port = None
 
 class Port:
     def __init__(self, name:str, parent):
+        # nombre del puerto
         self.name = name
+        # con esta propiedad conozco si un cable conectado al puerto
         self.cable = None
-        self.parent = parent
-        self.time = 0
+        # un puerto sabe de que dispositvo es
+        self.device = device
 
-class Computer:
+class Host:
     def __init__(self, name:str) -> None:
         self.name = name
         portname = f"{name}_1"
@@ -31,16 +34,16 @@ class Computer:
         self.port = port
         self.file = f"./Hosts/{name}.txt"
         self.data = None
+        # guarda todos los bloques de cadenas que aun no han sido enviados
         self.data_pending = queue.Queue()
         # muestra informacion sobre el bit que se esta transmitiendo cuando el host esta enviando informacion
         self.bit_sending = None
-        self.time_remaining = 0
-        self.sending = False
+        self.transmitting_time = 0
+        self.transmitting = False
         self.stopped = False
-        self.time_stopped = 0
+        self.stopped_time = 0
         self.failed_attempts = 0
         # me permite conecer  si una PC esta transmitiendo o no en un momento determinado informacion
-        self.sender = False
         f = open(self.file, 'w')
         f.close()
     
@@ -54,10 +57,13 @@ class Computer:
         message = f"{time} {self.port.name} {action} {data} {terminal}\n"
         self.UpdateFile(message)
 
-    def Stopwatcher(self):
-        if self.time_remaining != 0:
-            self.time_remaining -= 1    
-
+    def Put_Data(self, data: int):
+        if self.cable == None or self.cable.data != Data.Null:
+            return  False
+        else:
+            self.port.cable.data = data
+            self.bit_sending = data
+            return True
 
     def Next_Bit(self):
         n=len(self.data)
@@ -85,10 +91,6 @@ class Hub:
         f = open(self.file, 'w')
         f.close()
 
-
-    def Stopwatcher(self):
-        if self.time_remaining != 0:
-            self.time_remaining -= 1  
 
     def UpdateFile(self,  message):
         f=open(self.file,'a')
