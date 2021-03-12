@@ -1,5 +1,5 @@
 7 pc1_1 send 1 ok
 10 pc1_1 send 0 ok
 12 pc1_1 send 0 ok
-59 pc1_1 receive 1 ok
-62 pc1_1 receive 1 ok
+23 pc1_1 receive 1 ok
+26 pc1_1 receive 1 ok

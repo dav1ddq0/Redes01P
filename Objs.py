@@ -85,9 +85,9 @@ class Hub:
         f.close()
 
 
-    def Stopwatcher(self):
-        if self.time_remaining != 0:
-            self.time_remaining -= 1  
+    #def Stopwatcher(self):
+     #   if self.time_remaining != 0:
+      #      self.time_remaining -= 1  
 
     def UpdateFile(self,  message):
         f = open(self.file,'a')
