@@ -10,9 +10,9 @@ caller ={
 # parse de linne of the file
 def parse(line : str):
     #remove the line jump
-    line = line.replace('\n','')
+    line = line.strip()
+    line = line.replace('\n', '')
     #divide the line in tokens
-    
     codes = line.split(' ')
 
     try :

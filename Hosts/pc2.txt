@@ -1,8 +1,11 @@
 7 pc2_1 receive 0 ok
 9 pc2_1 receive 0 ok
-12 pc2_1 receive 0 ok
+11 pc2_1 receive 0 ok
 13 pc2_1 receive 1 ok
-15 pc2_1 receive 0 ok
-18 pc2_1 receive 1 ok
-21 pc2_1 receive 0 ok
-24 pc2_1 receive 1 ok
+14 pc2_1 receive 0 ok
+17 pc2_1 receive 1 ok
+20 pc2_1 receive 0 ok
+23 pc2_1 receive 1 ok
+26 pc2_1 receive 0 ok
+29 pc2_1 receive 1 ok
+32 pc2_1 receive 1 ok

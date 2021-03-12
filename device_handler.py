@@ -272,10 +272,10 @@ class Device_handler:
         else:
             device.transmitting = True
             device.transmitting_time = 0
-            device.Log(data, "send",self.time)
+            device.Log(data, "send", self.time)
             # revise el object del puerto 
             destination_port = self.ports[self.connections[origin_pc.port.name]]
-            destination_device =destination_port.device
+            destination_device = destination_port.device
             self.__spread_data(destination_device, data, destination_port)
 
 
@@ -292,7 +292,7 @@ class Device_handler:
             
         elif isinstance(device, objs.Hub):
             device.bit_sending = data
-            device.Log(data, "receive", data_incoming_port.name, self.time)
+            device.log(data, "receive", data_incoming_port.name, self.time)
             for port in device.ports:
                 if port != data_incoming_port and port.cable != None:
                     port.cable.data = data
@@ -300,16 +300,9 @@ class Device_handler:
                     # para seguir de forma recursiva por ese puerto es necesario primero verificar que este  este conectado con otro puerto a traves de un cable
                     # para eso verifico que este en dicc connections pues este guarda todas las conexiones entre puertos a traves de un cable
                     if port.name in self.connections.keys(): # en caso que este puerto conecte con otro de otro device
-                        device.Log(data, "send", port.name, self.time)
+                        device.log(data, "send", port.name, self.time)
                         next_port  = self.ports[self.connections[port.name]]
                         next_device = self.ports[self.connections[port.name]].device
                         # sigue regando la informacion a otros devices
                         self.__spread_data(next_device, data, next_port)
-                    
 
-
-
-
-            
-
-      
