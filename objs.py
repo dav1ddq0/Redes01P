@@ -1,13 +1,12 @@
 from enum import Enum
 import  queue
 
-ports = {}
+
 
 class Data(Enum):
     Null = "Null"
     One = "1"
     Zero = "0"
-
 
 class Cable:
     def __init__(self):
