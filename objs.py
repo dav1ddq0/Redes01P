@@ -56,7 +56,7 @@ class Host:
         self.UpdateFile(message)
 
     def Put_Data(self, data: int):
-        if self.cable == None or self.cable.data != Data.Null:
+        if self.port.cable == None or self.port.cable.data != Data.Null:
             return  False
         else:
             self.port.cable.data = data

@@ -94,7 +94,7 @@ class Device_handler:
         self.time = time    
         newhub = objs.Hub(name, ports)
         for port in newhub.ports:
-            ports[port.name] = port
+            self.ports[port.name] = port
 
     def setup_connection(self, name_port1: str, name_port2: str, time: int):
         self.upgrade_network_state(time)
@@ -117,14 +117,14 @@ class Device_handler:
                 #
                 # en caso que conecte un hub a otro hub que estan retransmitiendo la informacion desde distintos host
                 if device1.bit_sending != None and device2.bit_sending != None:
-                        self.walk_clean_data_cable(device1)
-                        self.walk_clean_data_cable(device2)
+                    self.walk_clean_data_cable(device1)
+                    self.walk_clean_data_cable(device2)
                 elif device1.bit_sending != None:
-                        port1.cable.data = device1.bit_sending
-                        self.__spread_data(device2, device1.bit_sending, port2)
+                    port1.cable.data = device1.bit_sending
+                    self.__spread_data(device2, device1.bit_sending, port2)
                 elif device2.bit_sending != None:
-                        port2.cable.data = device1.bit_sending
-                        self.__spread_data(device1, device2.bit_sending, port1)
+                    port2.cable.data = device1.bit_sending
+                    self.__spread_data(device1, device2.bit_sending, port1)
                 
 
        
@@ -248,7 +248,7 @@ class Device_handler:
         device = origin_pc
         device.bit_sending = data
         
-        if device.Put_Data(data):
+        if not device.Put_Data(data):
                 # el host no puede enviar en este momento la sennal pues se esta transmitiendo informacion por el canal o no tiene canal para transmitir la informacion
                 device.stopped = True
                 # aumenta la cantidad de intentos fallidos
