@@ -276,11 +276,11 @@ class Device_handler:
             # revise el object del puerto 
             destination_port = self.ports[self.connections[origin_pc.port.name]]
             destination_device =destination_port.device
-            self.spread_data(destination_device, data, destination_port)
+            self.__spread_data(destination_device, data, destination_port)
 
 
 
-    def spread_data(self, device, data, data_incoming_port):
+    def __spread_data(self, device, data, data_incoming_port):
 
         if isinstance(device, objs.Host):
             # en caso que la informacion llegue a una pc que deberia de estar transmitiendo
@@ -304,7 +304,7 @@ class Device_handler:
                         next_port  = self.ports[self.connections[port.name]]
                         next_device = self.ports[self.connections[port.name]].device
                         # sigue regando la informacion a otros devices
-                        self.spread_data(next_device, data, next_port)
+                        self.__spread_data(next_device, data, next_port)
                     
 
 
