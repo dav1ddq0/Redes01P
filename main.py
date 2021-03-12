@@ -36,5 +36,6 @@ def main():
         except TypeError:
             print("The value result of instruction and arg2  was not as expected")    
     handler.finished_network_transmission()
+    
 if __name__== "__main__":
     main()

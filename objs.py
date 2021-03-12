@@ -12,6 +12,7 @@ class Cable:
     def __init__(self):
         # conozco la informacion qu esta pasando por el cable
         self.data = Data.Null  # 0 1 Null son los tres estados en los que puede estar el cable
+        self.transfer_port = None
         # puerto de donde se esta enviando la informacion
         # es muy util para cuando haya que desconectar
 
@@ -57,11 +58,12 @@ class Host:
         message = f"{time} {self.port.name} {action} {data} {terminal}\n"
         self.UpdateFile(message)
 
-    def Put_Data(self, data: int):
+    def put_data(self, data: int):
         if self.port.cable == None or self.port.cable.data != Data.Null:
             return False
         else:
             self.port.cable.data = data
+            self.port.cable.transfer_port = self.port
             self.bit_sending = data
             return True
 
@@ -99,3 +101,8 @@ class Hub:
     def log(self, data, action, port, time):
         message = f"{time} {port} {action} {data}\n"
         self.__update_file(message)
+
+    def put_data(self, data:str, port: Port):
+        port.cable.data = data
+        port.cable.transfer_port = port
+

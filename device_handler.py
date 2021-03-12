@@ -2,13 +2,8 @@ from os import name, stat
 import objs
 import random
 
-errors = {  1 : "is free",
-            2 : "does not exist",
-            3 : "is not free",
-            4 : "the device must be a host",
-            5 : "host busy (collision)",
-            6 : "has a cable connected, but its other endpoint is not connected to another device"
-        }
+errors = {1 : "is free", 2: "does not exist", 3: "is not free", 4: "the device must be a host",
+          5: "host busy (collision)", 6: "has a cable connected, but its other endpoint is not connected to another device" }
 class Device_handler:
     # @property
     # def hosts(self):
@@ -35,14 +30,7 @@ class Device_handler:
             print(f"port {port_name} {errors[4]}")
             return False
 
-        elif port.cable == None:
-            print(f"port {port_name} {errors[1]}")
-            return False
-
-        elif port.name not in self.connections.keys():
-            print(f"port {name_port} {errors[6]}")
-            return False
-
+        
         return True
 
     def __validate_disconnection(self, name_port):
@@ -170,12 +158,16 @@ class Device_handler:
             port1 = self.ports[name_port]
             name_port2 = self.connections[name_port]
             port2 = self.ports[name_port2]
-            # si por este cable no esta pasando informacion actualmente
-            if port1.cable.data != None:
-                if port1.cable.port != port1:
-                    self.walk_clean_data_cable(port2.parent)
+            # si por este cable esta pasando informacion actualmente
+            if port1.cable.data != objs.Data.Null:
+                # en caso que la informacion provenga a traves del port1
+                # esta deja de llegar desde el port2 a todas las conexiones que partan de el
+                if port1.cable.transfer_port != port1:
+                    self.walk_clean_data_cable(port2.device)
                 else:
-                    self.walk_clean_data_cable(port1.parent)
+                # en caso que la informacion provenga a traves del port2
+                # esta deja de llegar desde el port1 a todas las conexiones que partan de el    
+                    self.walk_clean_data_cable(port1.device)
             # tengo que remover el cable del puerto port1 
             port1.cable = None        
             del self.connections[name_port]
@@ -184,7 +176,8 @@ class Device_handler:
     # de esta forma se revisa si host que esta transmitiendo dejo de hacerlo y por ende toda la informacion desaparece de los cables
     # a los que pueda llegar desde el otra
  
-    def update_devices(self):  
+    def update_devices(self):
+        ischange = False  
         for host in self.hosts:
             # en caso que el host no haya podido enviar una informacion previamente producto de una colision
             # por la forma del carrier senses el va a esperar un tiempo aleatorio entre 4 y 10ms para volver
@@ -194,8 +187,8 @@ class Device_handler:
                 if host.time_stopped == 0:
                     host.stopped = False
                     # vuelve a intentar enviar el bit que habia fallado previamente
-                    self.send_bit(host,host.bit_sending)
-                return True
+                    self.send_bit(host, host.bit_sending)
+                ischange = True
 
             if host.transmitting:
                 host.transmitting_time +=1
@@ -225,9 +218,9 @@ class Device_handler:
                         host.bit_sending = None
                         host.transmitting = False    
                 
-                return True    
+                ischange = True   
 
-        return False                
+        return ischange                
 
 
 
@@ -254,7 +247,7 @@ class Device_handler:
         device = origin_pc
         device.bit_sending = data
         
-        if not device.Put_Data(data):
+        if not device.put_data(data):
                 # el host no puede enviar en este momento la sennal pues se esta transmitiendo informacion por el canal o no tiene canal para transmitir la informacion
                 device.stopped = True
                 # aumenta la cantidad de intentos fallidos
@@ -268,7 +261,8 @@ class Device_handler:
                     device.time_stopped = nrand * self.transmition_time
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
-                    device.bit_sending = None    
+                    device.bit_sending = None 
+                    device.stopped = False   
         else:
             device.transmitting = True
             device.transmitting_time = 0
@@ -283,11 +277,6 @@ class Device_handler:
     def __spread_data(self, device, data, data_incoming_port):
 
         if isinstance(device, objs.Host):
-            # en caso que la informacion llegue a una pc que deberia de estar transmitiendo
-            # if device.bit_sending != None and not device.stopped:
-            #     device.Log(data, "receive", self.time, True)
-            #     device.bit_sending = None
-            # else:
             device.Log(data, "receive", self.time)
             
         elif isinstance(device, objs.Hub):
@@ -295,13 +284,13 @@ class Device_handler:
             device.log(data, "receive", data_incoming_port.name, self.time)
             for port in device.ports:
                 if port != data_incoming_port and port.cable != None:
-                    port.cable.data = data
-                    port.cable.port = port
+                    # pongo la informacion en el cable
+                    device.put_data(data, port)
                     # para seguir de forma recursiva por ese puerto es necesario primero verificar que este  este conectado con otro puerto a traves de un cable
                     # para eso verifico que este en dicc connections pues este guarda todas las conexiones entre puertos a traves de un cable
                     if port.name in self.connections.keys(): # en caso que este puerto conecte con otro de otro device
                         device.log(data, "send", port.name, self.time)
-                        next_port  = self.ports[self.connections[port.name]]
+                        next_port = self.ports[self.connections[port.name]]
                         next_device = self.ports[self.connections[port.name]].device
                         # sigue regando la informacion a otros devices
                         self.__spread_data(next_device, data, next_port)
