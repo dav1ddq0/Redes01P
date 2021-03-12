@@ -1,4 +1,8 @@
 7 pc1_1 send 0 ok
 9 pc1_1 send 0 ok
 11 pc1_1 send 0 ok
-10 pc1_1 send 0 collision
+13 pc1_1 send 1 ok
+14 pc1_1 send 0 ok
+17 pc1_1 send 1 ok
+20 pc1_1 send 0 ok
+23 pc1_1 send 1 ok

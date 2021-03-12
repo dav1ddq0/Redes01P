@@ -48,15 +48,15 @@ class Host:
         f = open(self.file, 'w')
         f.close()
 
-    def UpdateFile(self, message):
+    def __update_file(self, message):
         f = open(self.file, 'a')
         f.write(message)
         f.close()
 
-    def Log(self, data, action, time, collison=False):
+    def log(self, data, action, time, collison=False):
         terminal = "collision" if collison else "ok"
         message = f"{time} {self.port.name} {action} {data} {terminal}\n"
-        self.UpdateFile(message)
+        self.__update_file(message)
 
     def put_data(self, data: int):
         if self.port.cable == None or self.port.cable.data != Data.Null:
@@ -67,7 +67,7 @@ class Host:
             self.bit_sending = data
             return True
 
-    def Next_Bit(self):
+    def next_bit(self):
         n = len(self.data)
         if n > 0:
             next = self.data[n - 1]

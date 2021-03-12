@@ -128,7 +128,7 @@ class Device_handler:
                 device.stopped = True
                 device.transmitting = False
                 # notifica que hubo una colision y la informacion no pudo enviarse
-                device.Log(device.bit_sending, "send", self.time, True)
+                device.log(device.bit_sending, "send", self.time, True)
                 # el rango se duplica en cada intento fallido
                 if device.failed_attempts < 16:
                     nrand =  random.randint(1, 2*device.failed_attempts*10)
@@ -193,7 +193,7 @@ class Device_handler:
             if host.transmitting:
                 host.transmitting_time +=1
                 if host.transmitting_time % self.transmition_time == 0:
-                    nex_bit = host.Next_Bit()
+                    nex_bit = host.next_bit()
                     if nex_bit != None:
                         host.bit_sending = nex_bit
                     else:
@@ -208,7 +208,7 @@ class Device_handler:
                     if nex_bit == None and host.data_pending.qsize() > 0:
                         # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
                         host.data = host.data_pending.get()          
-                        nex_bit = host.Next_Bit()
+                        nex_bit = host.next_bit()
                                                 
                     if nex_bit != None:
                         if host.port.cable != None:
@@ -236,7 +236,7 @@ class Device_handler:
                 host.data_pending.put(data)
             else:
                 host.data = data
-                nex_bit = host.Next_Bit()
+                nex_bit = host.next_bit()
                 self.send_bit(host, nex_bit)
 
             
@@ -253,20 +253,26 @@ class Device_handler:
                 # aumenta la cantidad de intentos fallidos
                 device.failed_attempts += 1 
                 # notifica que hubo una colision y la informacion no pudo enviarse
-                device.Log(data, "send", self.time, True)
+                device.log(data, "send", self.time, True)
                 # el rango se duplica en cada intento fallido
                 if device.failed_attempts < 16:
-                    nrand =  random.randint(1, 2*device.failed_attempts*10)
+                    nrand = random.randint(1, 2*device.failed_attempts*10)
                     # dada una colision espero un tiempo cada vez mayor para poder volverla a enviar
                     device.stopped_time = nrand * self.transmition_time
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
                     device.bit_sending = None 
-                    device.stopped = False   
+                    device.stopped = False
+                    next_bit = device.next_bit()
+                    if next_bit != None:
+                        device.bit_sending =next_bit
+                        device.stopped = True
+                        device.stopped_time = 1
+                        device.failed_attempts = 0
         else:
             device.transmitting = True
             device.transmitting_time = 0
-            device.Log(data, "send", self.time)
+            device.log(data, "send", self.time)
             # revise el object del puerto 
             destination_port = self.ports[self.connections[origin_pc.port.name]]
             destination_device = destination_port.device
@@ -277,7 +283,7 @@ class Device_handler:
     def __spread_data(self, device, data, data_incoming_port):
 
         if isinstance(device, objs.Host):
-            device.Log(data, "receive", self.time)
+            device.log(data, "receive", self.time)
             
         elif isinstance(device, objs.Hub):
             device.bit_sending = data
