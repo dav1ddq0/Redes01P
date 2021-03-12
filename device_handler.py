@@ -105,8 +105,8 @@ class Device_handler:
                 #
                 # en caso que conecte un hub a otro hub que estan retransmitiendo la informacion desde distintos host
                 if device1.bit_sending != None and device2.bit_sending != None:
-                    self.walk_clean_data_cable(device1)
-                    self.walk_clean_data_cable(device2)
+                    self.walk_clean_data_cable(device1, port1)
+                    self.walk_clean_data_cable(device2, port2)
                 elif device1.bit_sending != None:
                     port1.cable.data = device1.bit_sending
                     self.__spread_data(device2, device1.bit_sending, port2)
@@ -133,7 +133,7 @@ class Device_handler:
                 if device.failed_attempts < 16:
                     nrand =  random.randint(1, 2*device.failed_attempts*10)
                     # dada una colision espero un tiempo cada vez mayor para poder volverla a enviar
-                    device.time_stopped = nrand * self.transmition_time
+                    device.stopped_time = nrand * self.transmition_time
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
                     device.bit_sending = None
@@ -183,8 +183,8 @@ class Device_handler:
             # por la forma del carrier senses el va a esperar un tiempo aleatorio entre 4 y 10ms para volver
             # a intentar enviar esa informacion
             if host.stopped:
-                host.time_stopped -=1
-                if host.time_stopped == 0:
+                host.stopped_time -=1
+                if host.stopped_time == 0:
                     host.stopped = False
                     # vuelve a intentar enviar el bit que habia fallado previamente
                     self.send_bit(host, host.bit_sending)
@@ -258,7 +258,7 @@ class Device_handler:
                 if device.failed_attempts < 16:
                     nrand =  random.randint(1, 2*device.failed_attempts*10)
                     # dada una colision espero un tiempo cada vez mayor para poder volverla a enviar
-                    device.time_stopped = nrand * self.transmition_time
+                    device.stopped_time = nrand * self.transmition_time
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
                     device.bit_sending = None 

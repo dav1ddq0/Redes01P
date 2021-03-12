@@ -1,3 +1,1 @@
 9 pc2_1 send 0 collision
-12 pc2_1 receive 1 ok
-14 pc2_1 receive 0 ok
