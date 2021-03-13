@@ -217,7 +217,7 @@ class Device_handler:
                     if nex_bit != None:
                         host.bit_sending = nex_bit
                     else:
-                        host.bit_sending = -1
+                        host.bit_sending = None
 
                     if host.port.name in self.connections.keys():
                         portname2 = self.connections[host.port.name]
@@ -281,14 +281,17 @@ class Device_handler:
                     device.stopped_time = nrand * self.transmition_time
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
-                    device.bit_sending = None 
-                    device.stopped = False
+                     
+                    device.stopped = True
                     next_bit = device.next_bit()
                     if next_bit != None:
                         device.bit_sending =next_bit
                         device.stopped = True
                         device.stopped_time = 1
                         device.failed_attempts = 0
+                    else:
+                        device.stopped = False
+                            
         else:
             device.transmitting = True
             device.transmitting_time = 0
