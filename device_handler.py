@@ -111,13 +111,19 @@ class Device_handler:
                     self.devices_visited.clear()
                     self.__clear_cables_data(device2, port2)
                 elif device1.bit_sending != None:
-                    port1.cable.data = device1.bit_sending
-                    self.devices_visited.clear()
-                    self.__spread_data(device2, device1.bit_sending, port2)
+                    if isinstance(device1, objs.Host):
+                        self.__send_bit(device1,device1.bit_sending)
+                    else:
+                        port1.cable.data = device1.bit_sending
+                        self.devices_visited.clear()
+                        self.__spread_data(device2, device1.bit_sending, port2)
                 elif device2.bit_sending != None:
-                    port2.cable.data = device1.bit_sending
-                    self.devices_visited.clear()
-                    self.__spread_data(device1, device2.bit_sending, port1)
+                    if isinstance(device2, objs.Host):
+                        self.__send_bit(device2,device2.bit_sending)
+                    else:
+                        port2.cable.data = device2.bit_sending
+                        self.devices_visited.clear()
+                        self.__spread_data(device1, device2.bit_sending, port1)
                 
 
        
