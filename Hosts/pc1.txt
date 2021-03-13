@@ -8,6 +8,7 @@
 9 pc1_1 send 0 ok
 11 pc1_1 send 0 ok
 10 pc1_1 send 0 collision
+<<<<<<< HEAD
 12 pc1_1 send 0 ok
 13 pc1_1 send 1 ok
 15 pc1_1 send 0 ok
@@ -18,3 +19,13 @@
 40 pc1_1 receive 1 ok
 43 pc1_1 receive 1 ok
 >>>>>>> b7f0cb2a27b5fc35d9551aee7678319be2c70a49
+=======
+11 pc1_1 send 0 ok
+12 pc1_1 send 1 ok
+14 pc1_1 send 0 ok
+16 pc1_1 send 1 ok
+19 pc1_1 send 0 ok
+21 pc1_1 send 1 ok
+21 pc1_1 send 1 collision
+25 pc1_1 send 1 ok
+>>>>>>> 21d9f5f7f876091130f3d056176bd1512eaea266

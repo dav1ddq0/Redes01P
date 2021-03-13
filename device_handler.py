@@ -164,11 +164,11 @@ class Device_handler:
                 # en caso que la informacion provenga a traves del port1
                 # esta deja de llegar desde el port2 a todas las conexiones que partan de el
                 if port1.cable.transfer_port != port1:
-                    self.walk_clean_data_cable(port2.device, port2)
+                    self.walk_clean_data_cable(port2.device,port2)
                 else:
                 # en caso que la informacion provenga a traves del port2
                 # esta deja de llegar desde el port1 a todas las conexiones que partan de el    
-                    self.walk_clean_data_cable(port1.device, port2)
+                    self.walk_clean_data_cable(port1.device,port1)
             # tengo que remover el cable del puerto port1 
             port1.cable = None        
             del self.connections[name_port]

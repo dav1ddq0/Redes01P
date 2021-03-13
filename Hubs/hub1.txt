@@ -9,6 +9,7 @@
 =======
 9 hub1_1 receive 0
 11 hub1_1 receive 0
+<<<<<<< HEAD
 12 hub1_1 receive 0
 12 hub1_2 send 0
 13 hub1_1 receive 1
@@ -28,3 +29,20 @@
 43 hub1_2 receive 1
 43 hub1_1 send 1
 >>>>>>> b7f0cb2a27b5fc35d9551aee7678319be2c70a49
+=======
+11 hub1_1 receive 0
+11 hub1_2 send 0
+12 hub1_1 receive 1
+12 hub1_2 send 1
+14 hub1_1 receive 0
+14 hub1_2 send 0
+16 hub1_1 receive 1
+16 hub1_2 send 1
+19 hub1_1 receive 0
+19 hub1_2 send 0
+21 hub1_1 receive 1
+21 hub1_2 send 1
+21 hub1_3 send 1
+25 hub1_1 receive 1
+25 hub1_3 send 1
+>>>>>>> 21d9f5f7f876091130f3d056176bd1512eaea266
