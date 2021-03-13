@@ -109,10 +109,10 @@ class Device_handler:
                     self.walk_clean_data_cable(device2, port2)
                 elif device1.bit_sending != None:
                     port1.cable.data = device1.bit_sending
-                    self.____spread_data(device2, device1.bit_sending, port2)
+                    self.__spread_data(device2, device1.bit_sending, port2)
                 elif device2.bit_sending != None:
                     port2.cable.data = device1.bit_sending
-                    self.____spread_data(device1, device2.bit_sending, port1)
+                    self.__spread_data(device1, device2.bit_sending, port1)
                 
 
        
@@ -164,11 +164,11 @@ class Device_handler:
                 # en caso que la informacion provenga a traves del port1
                 # esta deja de llegar desde el port2 a todas las conexiones que partan de el
                 if port1.cable.transfer_port != port1:
-                    self.walk_clean_data_cable(port2.device)
+                    self.walk_clean_data_cable(port2.device, port2)
                 else:
                 # en caso que la informacion provenga a traves del port2
                 # esta deja de llegar desde el port1 a todas las conexiones que partan de el    
-                    self.walk_clean_data_cable(port1.device)
+                    self.walk_clean_data_cable(port1.device, port2)
             # tengo que remover el cable del puerto port1 
             port1.cable = None        
             del self.connections[name_port]
