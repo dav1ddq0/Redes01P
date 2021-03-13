@@ -17,6 +17,7 @@ class Device_handler:
         # diccionario que va a guardar todos los puertos de todos los devices para poder acceder de manera rapida a los mismo en 
         # las operaciones necesarias
         self.ports = {}
+        self.devices_visited = []
 
     def __validate_send(self, host):
 
@@ -109,9 +110,11 @@ class Device_handler:
                     self.walk_clean_data_cable(device2, port2)
                 elif device1.bit_sending != None:
                     port1.cable.data = device1.bit_sending
+                    self.devices_visited.clear()
                     self.__spread_data(device2, device1.bit_sending, port2)
                 elif device2.bit_sending != None:
                     port2.cable.data = device1.bit_sending
+                    self.devices_visited.clear()
                     self.__spread_data(device1, device2.bit_sending, port1)
                 
 
@@ -277,12 +280,16 @@ class Device_handler:
             # revise el object del puerto 
             destination_port = self.ports[self.connections[origin_pc.port.name]]
             destination_device = destination_port.device
+            self.devices_visited.clear()
             self.__spread_data(destination_device, data, destination_port)
 
 
 
     def __spread_data(self, device, data, data_incoming_port):
+        if device.name in self.devices_visited:
+            return
 
+        self.devices_visited.append(device.name)
         if isinstance(device, objs.Host):
             device.log(data, "receive", self.time)
             
