@@ -35,13 +35,13 @@ class Device_handler:
         return True
 
     def __validate_disconnection(self, name_port):
-        port = self.ports[name_port]
+        
 
         if name_port not in self.ports.keys():
              print(f"port {name_port} {errors[2]}")
              return False
-
-        elif port.cable == None:
+        port = self.ports[name_port]
+        if port.cable == None:
                 print(f"port {name_port} {errors[1]}")
                 return False
 
@@ -55,7 +55,7 @@ class Device_handler:
             return False
         port = self.ports[name_port]
         if  port.cable != None:
-                print(f"Port{name_port} {errors[3]}")
+                print(f"port {name_port} {errors[3]}")
                 return False
 
         return True
@@ -165,24 +165,27 @@ class Device_handler:
 
         if self.__validate_disconnection(name_port):
             port1 = self.ports[name_port]
-            name_port2 = self.connections[name_port]
-            port2 = self.ports[name_port2]
-            # si por este cable esta pasando informacion actualmente
-            if port1.cable.data != objs.Data.Null:
-                # en caso que la informacion provenga a traves del port1
-                # esta deja de llegar desde el port2 a todas las conexiones que partan de el
-                if port1.cable.transfer_port != port1:
-                    self.devices_visited.clear()
-                    self.__clear_cables_data(port2.device,port2)
-                else:
-                # en caso que la informacion provenga a traves del port2
-                # esta deja de llegar desde el port1 a todas las conexiones que partan de el    
-                    self.devices_visited.clear()
-                    self.__clear_cables_data(port1.device,port1)
-            # tengo que remover el cable del puerto port1 
-            port1.cable = None        
-            del self.connections[name_port]
-            del self.connections[name_port2]
+            if port1 in self.connections.keys():
+                name_port2 = self.connections[name_port]
+                port2 = self.ports[name_port2]
+                # si por este cable esta pasando informacion actualmente
+                if port1.cable.data != objs.Data.Null:
+                    # en caso que la informacion provenga a traves del port1
+                    # esta deja de llegar desde el port2 a todas las conexiones que partan de el
+                    if port1.cable.transfer_port != port1:
+                        self.devices_visited.clear()
+                        self.__clear_cables_data(port2.device,port2)
+                    else:
+                    # en caso que la informacion provenga a traves del port2
+                    # esta deja de llegar desde el port1 a todas las conexiones que partan de el    
+                        self.devices_visited.clear()
+                        self.__clear_cables_data(port1.device,port1)
+                # tengo que remover el cable del puerto port1 
+                port1.cable = None        
+                del self.connections[name_port]
+                del self.connections[name_port2]
+            else:
+                port1.cable = None    
 
     # de esta forma se revisa si host que esta transmitiendo dejo de hacerlo y por ende toda la informacion desaparece de los cables
     # a los que pueda llegar desde el otra
