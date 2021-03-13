@@ -9,5 +9,6 @@
 44 cp_1 receive 1 ok
 47 cp_1 receive 0 ok
 165 cp_1 send 0 collision
-206 cp_1 send 0 collision
-239 cp_1 send 0 collision
+185 cp_1 send 0 collision
+271 cp_1 send 0 collision
+339 cp_1 send 0 collision
