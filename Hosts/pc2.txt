@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 7 pc2_1 receive 0 ok
 10 pc2_1 receive 0 ok
@@ -72,3 +73,5 @@
 11519 pc2_1 send 1 collision
 11669 pc2_1 send 1 collision
 >>>>>>> 21d9f5f7f876091130f3d056176bd1512eaea266
+=======
+>>>>>>> b6e4aef2cde3bc3a45cc1a21dd97d3c1f56eab4b
