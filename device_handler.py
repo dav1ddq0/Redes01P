@@ -66,27 +66,27 @@ class Device_handler:
             if not self.__update_devices():
                 break
 
-    def __upgrade_network_state(self, time: int):
+    def __update_network_status(self, time: int):
         while self.time <= time:
             self.time += 1
             self.__update_devices()
         self.time = time
 
     def create_pc(self, name: str, time: int):
-        self.__upgrade_network_state(time)
+        self.__update_network_status(time)
         newpc = objs.Host(name)
         self.hosts.append(newpc)
         self.ports[newpc.port.name] = newpc.port
 
     def create_hub(self, name: str, ports, time: int):
-        self.__upgrade_network_state(time)
+        self.__update_network_status(time)
         self.time = time    
         newhub = objs.Hub(name, ports)
         for port in newhub.ports:
             self.ports[port.name] = port
 
     def setup_connection(self, name_port1: str, name_port2: str, time: int):
-        self.__upgrade_network_state(time)
+        self.__update_network_status(time)
 
         if self.__validate_connection(name_port1) and self.__validate_connection(name_port2):
             port1 = self.ports[name_port1]
@@ -107,9 +107,9 @@ class Device_handler:
                 # en caso que conecte un hub a otro hub que estan retransmitiendo la informacion desde distintos host
                 if device1.bit_sending != None and device2.bit_sending != None:
                     self.devices_visited.clear()
-                    self.__walk_clean_data_cable(device1, port1)
+                    self.__clear_cables_data(device1, port1)
                     self.devices_visited.clear()
-                    self.__walk_clean_data_cable(device2, port2)
+                    self.__clear_cables_data(device2, port2)
                 elif device1.bit_sending != None:
                     port1.cable.data = device1.bit_sending
                     self.devices_visited.clear()
@@ -125,7 +125,7 @@ class Device_handler:
 
 
     # hay que remover los datos de los cables que se quedaron desconectados del host que estaba enviando informacion
-    def __walk_clean_data_cable(self, device, incoming_port:objs.Port):
+    def __clear_cables_data(self, device, incoming_port:objs.Port):
         # en caso que llegue a una PC es porque no tengo
         # que seguir verificando conexiones muertas pues la pc solo puede enviar o recibir
         if device.name in self.devices_visited:
@@ -158,10 +158,10 @@ class Device_handler:
                     if port.name in self.connections.keys():
                         portname2 = self.connections[port.name]
                         port2 = self.ports[portname2]
-                        self.__walk_clean_data_cable(port2.device,port2)
+                        self.__clear_cables_data(port2.device,port2)
 
     def shutdown_connection(self, name_port: str, time: int):
-        self.__upgrade_network_state(time)
+        self.__update_network_status(time)
 
         if self.__validate_disconnection(name_port):
             port1 = self.ports[name_port]
@@ -173,12 +173,12 @@ class Device_handler:
                 # esta deja de llegar desde el port2 a todas las conexiones que partan de el
                 if port1.cable.transfer_port != port1:
                     self.devices_visited.clear()
-                    self.__walk_clean_data_cable(port2.device,port2)
+                    self.__clear_cables_data(port2.device,port2)
                 else:
                 # en caso que la informacion provenga a traves del port2
                 # esta deja de llegar desde el port1 a todas las conexiones que partan de el    
                     self.devices_visited.clear()
-                    self.__walk_clean_data_cable(port1.device,port1)
+                    self.__clear_cables_data(port1.device,port1)
             # tengo que remover el cable del puerto port1 
             port1.cable = None        
             del self.connections[name_port]
@@ -215,7 +215,7 @@ class Device_handler:
                         port2 = self.ports[portname2]
                         # limpia el camino para enviar el proximo bit
                         self.devices_visited.clear()
-                        self.__walk_clean_data_cable(port2.device,port2)
+                        self.__clear_cables_data(port2.device,port2)
 
                     if nex_bit == None and host.data_pending.qsize() > 0:
                         # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
@@ -238,7 +238,7 @@ class Device_handler:
 
     def send(self, origin_pc, data, time):
         # actualiza primero la red por si todavia no ha llegado a time 
-        self.__upgrade_network_state(time)
+        self.__update_network_status(time)
 
         if self.__validate_send(origin_pc):  # El send es valido
             host = self.ports[origin_pc+'_1'].device
