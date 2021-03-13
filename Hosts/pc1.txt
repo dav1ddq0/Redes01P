@@ -2,6 +2,12 @@
 9 pc1_1 send 0 ok
 11 pc1_1 send 0 ok
 10 pc1_1 send 0 collision
-32 pc1_1 receive 0 ok
-34 pc1_1 receive 1 ok
-37 pc1_1 receive 1 ok
+12 pc1_1 send 0 ok
+13 pc1_1 send 1 ok
+15 pc1_1 send 0 ok
+18 pc1_1 send 1 ok
+21 pc1_1 send 0 ok
+24 pc1_1 send 1 ok
+38 pc1_1 receive 0 ok
+40 pc1_1 receive 1 ok
+43 pc1_1 receive 1 ok

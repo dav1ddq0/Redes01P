@@ -2,11 +2,7 @@ import sys, argparse
 import device_handler as dh
 import myParser
 
-# dicc contains every type of error possible in connection,desconnection port
-errors = {  1 : "port is busy",
-            2 : "port does not exist",
-            3 : "port is free"
-        }
+
 handler = dh.Device_handler()        
 # dicc that func like a launcher to the principal methods
 caller ={
@@ -33,11 +29,13 @@ def main():
         try:
             instruction, args2 = myParser.parse(line)
         except ValueError:
-            print("Parse Error wrong line sintax")   
-        try:
-            caller[instruction](args2)
-        except ValueError:
-            print("Excution Error")
+            print("Parse Error wrong line sintax")
+            return
+        # try:
+        caller[instruction](args2)
+        # except ValueError:
+        #     print("Excution Error")
+        #     return
 
     handler.finished_network_transmission()
     

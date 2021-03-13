@@ -127,13 +127,14 @@ class Device_handler:
             if device.transmitting:
                 device.stopped = True
                 device.transmitting = False
+                device.failed_attempts = 1
                 # notifica que hubo una colision y la informacion no pudo enviarse
                 device.log(device.bit_sending, "send", self.time, True)
                 # el rango se duplica en cada intento fallido
                 if device.failed_attempts < 16:
                     nrand =  random.randint(1, 2*device.failed_attempts*10)
                     # dada una colision espero un tiempo cada vez mayor para poder volverla a enviar
-                    device.stopped_time = nrand * self.transmition_time
+                    device.stopped_time = nrand * device.failed_attempts
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
                     device.bit_sending = None
