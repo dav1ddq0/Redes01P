@@ -1,5 +1,20 @@
 <<<<<<< HEAD
 =======
 7 pc1_1 send 0 ok
+<<<<<<< HEAD
 10 pc1_1 send 0 ok
 >>>>>>> b8bbfee2ad9ebc0ec3f543bd8b36ec35926e0c40
+=======
+9 pc1_1 send 0 ok
+11 pc1_1 send 0 ok
+10 pc1_1 send 0 collision
+12 pc1_1 send 0 ok
+13 pc1_1 send 1 ok
+15 pc1_1 send 0 ok
+18 pc1_1 send 1 ok
+21 pc1_1 send 0 ok
+24 pc1_1 send 1 ok
+38 pc1_1 receive 0 ok
+40 pc1_1 receive 1 ok
+43 pc1_1 receive 1 ok
+>>>>>>> b7f0cb2a27b5fc35d9551aee7678319be2c70a49

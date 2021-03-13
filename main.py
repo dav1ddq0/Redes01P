@@ -28,9 +28,16 @@ def main():
     for line in f.readlines():
         try:
             instruction, args2 = myParser.parse(line)
-            caller[instruction](args2)
-        except TypeError:
-            print("The value result of instruction and arg2  was not as expected")    
+        except ValueError:
+            print("Parse Error wrong line sintax")
+            return
+        # try:
+        caller[instruction](args2)
+        # except ValueError:
+        #     print("Excution Error")
+        #     return
+
     handler.finished_network_transmission()
+    
 if __name__== "__main__":
     main()
