@@ -9,3 +9,5 @@
 11 create host pc3
 12 create host pc4
 13 create host pc5
+20 connect hub1_3 pc3_1
+21 disconnect pc2_1
