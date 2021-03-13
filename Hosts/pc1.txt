@@ -1,2 +1,2 @@
 7 pc1_1 send 0 ok
-10 pc1_1 send 0 collision
+10 pc1_1 send 0 ok
