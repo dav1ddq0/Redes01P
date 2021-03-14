@@ -29,7 +29,7 @@ class Device_handler:
         self.ports = {}
         self.devices_visited = []
 
-    def __validate_send(self, host):
+    def __validate_send(self, host) -> bool:
 
         port_name = host+"_1"
         if port_name not in self.ports.keys():
