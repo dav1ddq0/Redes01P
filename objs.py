@@ -34,7 +34,7 @@ class Host:
         port = Port(portname, self)
         self.port = port
         self.file = f"./Hosts/{name}.txt"
-        self.data = None
+        self.data = ""
         # guarda todos los bloques de cadenas que aun no han sido enviados
         self.data_pending = queue.Queue()
         # muestra informacion sobre el bit que se esta transmitiendo cuando el host esta enviando informacion
@@ -73,6 +73,11 @@ class Host:
             next = self.data[n - 1]
             self.data = self.data[0:n - 1]
             return next
+
+        if self.data_pending.qsize() > 0:
+            data = self.data_pending.get()
+            return self.next_bit()    
+       
         return None
 
 
@@ -93,12 +98,12 @@ class Hub:
         f = open(self.file, 'w')
         f.close()
 
-    def __update_file(self, message: str):
+    def __update_file(self, message: str) -> None:
         f = open(self.file, 'a')
         f.write(message)
         f.close()
 
-    def log(self, data, action, port, time):
+    def log(self, data, action, port, time) -> None:
         message = f"{time} {port} {action} {data}\n"
         self.__update_file(message)
 
