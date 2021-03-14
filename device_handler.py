@@ -19,11 +19,11 @@ class Device_handler:
     # def hosts(self):
     #     return self.hosts
 
-    def __init__(self) -> None:
+    def __init__(self, slot_time: int) -> None:
         self.hosts = []
         self.connections = {}
         self.time = 0
-        self.transmition_time = 3
+        self.slot_time = slot_time
         # diccionario que va a guardar todos los puertos de todos los devices para poder acceder de manera rapida a los mismo en 
         # las operaciones necesarias
         self.ports = {}
@@ -71,33 +71,40 @@ class Device_handler:
 
         return True
 
-    def finished_network_transmission(self):    
+    def finished_network_transmission(self):
+        # al no quedar mas instruccionens por ejecutar
+        # mantengo recorrido de los devices mientras haya alguna
+        # actividad de los host      
         while True:
             self.time += 1
             if not self.__update_devices():
                 break
 
     def __update_network_status(self, time: int):
+        # actualizo la red hasta el time de la instruccion actual
         while self.time < time:
             self.time += 1
             self.__update_devices()
         self.time = time
 
     def create_pc(self, name: str, time: int):
-
+        # actualiza la red hasta que llegues al time en que vino la nueva instruccion
         self.__update_network_status(time)
         newpc = objs.Host(name)
         self.hosts.append(newpc)
+        # agrego el unico puerto que tiene un host al dicc que contiene todos los puertos de la red
         self.ports[newpc.port.name] = newpc.port
 
     def create_hub(self, name: str, ports, time: int):
-        self.__update_network_status(time)
-        self.time = time    
+        # actualiza la red hasta que llegues al time en que vino la nueva instruccion
+        self.__update_network_status(time)    
         newhub = objs.Hub(name, ports)
+        # agrego cada puerto que tiene un hub al dicc que contiene todos puertos de la red
         for port in newhub.ports:
             self.ports[port.name] = port
 
     def setup_connection(self, name_port1: str, name_port2: str, time: int):
+        # actualiza la red hasta que llegues al time en que vino la nueva instruccion
         self.__update_network_status(time)
 
         if self.__validate_connection(name_port1) and self.__validate_connection(name_port2):
@@ -114,15 +121,18 @@ class Device_handler:
                 newcable = objs.Cable()
                 port1.cable = newcable
                 port2.cable = newcable
-                # si los dispositvos pertencientes a los puertos estan transmitiendo informacion a la vez
+                # si los dispositvos  pertenecientes a los puertos estan transmitiendo informacion a la vez
                 #
                 # en caso que conecte un hub a otro hub que estan retransmitiendo la informacion desde distintos host
+                # se manda un sennal para tumbar la transmision en ambos lados y los host volveraran a intentar 
+                # transmitir la informacion luego de un tiempo aleatorio en cada uno 
                 if device1.bit_sending != None and device2.bit_sending != None:
                     self.devices_visited.clear()
                     self.__clear_cables_data(device1, port1, True)
                     self.devices_visited.clear()
                     self.__clear_cables_data(device2, port2, True)
-                
+                # en caso que device1 esta transmitiendo informacion riego la informacion por los nuevos
+                # cables que ahora estan interconectados desde el device2 
                 elif device1.bit_sending != None:
                     port1.cable.data = device1.bit_sending
                     if isinstance(device1, objs.Host) and not device1.transmitting:       
@@ -131,8 +141,8 @@ class Device_handler:
                         self.devices_visited.clear()
                         self.__spread_data(device2, device1.bit_sending, port2)
                     
-                    
-
+                # en caso que device2 esta transmitiendo informacion riego la informacion por los nuevos
+                # cables que ahora estan interconectados desde el device1    
                 elif device2.bit_sending != None:
                     port2.cable.data = device2.bit_sending
                     if isinstance(device2, objs.Host) and device2.transmitting:
@@ -228,8 +238,8 @@ class Device_handler:
         ischange = False  
         for host in self.hosts:
             # en caso que el host no haya podido enviar una informacion previamente producto de una colision
-            # por la forma del carrier senses el va a esperar un tiempo aleatorio entre 4 y 10ms para volver
-            # a intentar enviar esa informacion
+            # por la forma del carrier sense el va a esperar un tiempo aleatorio  para volver a enviar
+            # esa informacion y el host esta en modo stopped
             if host.stopped:
                 host.stopped_time -= 1
                 if host.stopped_time == 0:
@@ -237,10 +247,11 @@ class Device_handler:
                     # vuelve a intentar enviar el bit que habia fallado previamente
                     self.__send_bit(host, host.bit_sending)
                 ischange = True
-
+            # en caso que el host este transmitiendo un informacion
             elif host.transmitting:
                 host.transmitting_time +=1
-                if host.transmitting_time % self.transmition_time == 0:
+                # compruebo si la informacion vencio el maximo time que puede estar en el canal
+                if host.transmitting_time % self.slot_time == 0:
                     if host.port.cable != None:
                         host.port.cable.data = objs.Data.Null
                     host.bit_sending = None    
@@ -282,7 +293,8 @@ class Device_handler:
                 host.data_pending.put(data)
             else:
                 host.data = data
-
+            # en caso que el host este disponible para enviar pues el mismo puede estar
+            # en medio de una transmision o estar esperando producto de una colision a enviar un dato fallido 
             if not host.stopped and not host.transmitting:
                 nex_bit = host.next_bit()
                 self.__send_bit(host, nex_bit)
@@ -293,7 +305,7 @@ class Device_handler:
     def __send_bit(self, origin_pc, data):
         device = origin_pc
         device.bit_sending = data
-        
+        # si hubo colision 
         if not device.put_data(data):
                 device.transmitting = False
                 # el host no puede enviar en este momento la sennal pues se esta transmitiendo informacion por el canal o no tiene canal para transmitir la informacion
@@ -306,7 +318,7 @@ class Device_handler:
                 if device.failed_attempts < 16:
                     nrand = random.randint(1, 2*device.failed_attempts*10)
                     # dada una colision espero un tiempo cada vez mayor para poder volverla a enviar
-                    device.stopped_time = nrand * self.transmition_time
+                    device.stopped_time = nrand * self.slot_time
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
                      
@@ -319,7 +331,8 @@ class Device_handler:
                         device.failed_attempts = 0
                     else:
                         device.stopped = False
-                            
+        # en caso que no haya colision empiezo a regar la informacion  desde el host por toda la red de cables interconectados 
+        # alcanzables por el host                    
         else:
             device.transmitting = True
             device.transmitting_time = 0
@@ -331,11 +344,13 @@ class Device_handler:
             self.__spread_data(destination_device, data, destination_port)
 
 
+    # este metodo se encarga de regar la informacion a retransmitir por todos los cables alcanzables desde un device origen
 
     def __spread_data(self, device, data, data_incoming_port):
+        # si este device ya fue visitado entonces no tengo nada que hacer
         if device.name in self.devices_visited:
             return
-
+        # agrego el device a la lista de dispositivos visidados
         self.devices_visited.append(device.name)    
         if isinstance(device, objs.Host):
             device.log(data, "receive", self.time)
