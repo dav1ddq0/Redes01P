@@ -75,7 +75,7 @@ class Host:
             return next
 
         if self.data_pending.qsize() > 0:
-            data = self.data_pending.get()
+            self.data = self.data_pending.get()
             return self.next_bit()    
        
         return None
