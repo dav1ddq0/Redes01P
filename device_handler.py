@@ -169,7 +169,7 @@ class Device_handler:
                     device.stopped_time = nrand * device.failed_attempts
                 else:
                     # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
-                    nex_bit = host.next_bit()
+                    nex_bit = device.next_bit()
                     # if nex_bit == None and host.data_pending.qsize() > 0:
                     #   # obtengo la proxima cadena de bits a transmitir sacando el proximo elemento de la cola
                     #   host.data = host.data_pending.get()          
