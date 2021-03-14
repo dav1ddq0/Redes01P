@@ -78,7 +78,7 @@ class Device_handler:
                 break
 
     def __update_network_status(self, time: int):
-        while self.time <= time:
+        while self.time < time:
             self.time += 1
             self.__update_devices()
         self.time = time
@@ -205,7 +205,8 @@ class Device_handler:
                 if port1.cable.data != objs.Data.Null:
                     # en caso que la informacion provenga a traves del port1
                     # esta deja de llegar desde el port2 a todas las conexiones que partan de el
-                    if port1.cable.transfer_port != port1:
+                    port1.cable.data = objs.Data.Null
+                    if port1.cable.transfer_port == port1:                        
                         self.devices_visited.clear()
                         self.__clear_cables_data(port2.device,port2)
                     else:
@@ -237,7 +238,7 @@ class Device_handler:
                     self.__send_bit(host, host.bit_sending)
                 ischange = True
 
-            if host.transmitting:
+            elif host.transmitting:
                 host.transmitting_time +=1
                 if host.transmitting_time % self.transmition_time == 0:
                     if host.port.cable != None:
@@ -281,6 +282,8 @@ class Device_handler:
                 host.data_pending.put(data)
             else:
                 host.data = data
+
+            if not host.stopped and not host.transmitting:
                 nex_bit = host.next_bit()
                 self.__send_bit(host, nex_bit)
 
