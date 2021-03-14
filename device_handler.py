@@ -2,8 +2,18 @@ from os import name, stat
 import objs
 import random
 
-errors = {1 : "is free", 2: "does not exist", 3: "is not free", 4: "the device must be a host",
+errors = {1 : "do not has a cable connected", 2: "does not exist", 3: "is not free", 4: "the device must be a host",
           5: "host busy (collision)", 6: "has a cable connected, but its other endpoint is not connected to another device" }
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 class Device_handler:
     # @property
     # def hosts(self):
@@ -23,12 +33,12 @@ class Device_handler:
 
         port_name = host+"_1"
         if port_name not in self.ports.keys():
-            print(f"port {port_name} {errors[2]}")
+            print(f"{bcolors.WARNING} send error {bcolors.ENDC} the device {bcolors.OKBLUE} {host} {bcolors.ENDC} {errors[2]}")
             return False
 
         port = self.ports[port_name]
         if not isinstance(port.device, objs.Host):
-            print(f"port {port_name} {errors[4]}")
+            print(f"{bcolors.WARNING} send error {bcolors.ENDC} the device {bcolors.OKBLUE} {host} {bcolors.ENDC} {errors[4]}")
             return False
 
         
@@ -36,26 +46,27 @@ class Device_handler:
 
     def __validate_disconnection(self, name_port):
         
-
         if name_port not in self.ports.keys():
-             print(f"port {name_port} {errors[2]}")
+             print(f"{bcolors.WARNING}invalid disconnection{bcolors.ENDC} port {bcolors.OKGREEN}{name_port} {bcolors.ENDC} {errors[2]}")
              return False
         port = self.ports[name_port]
         if port.cable == None:
-                print(f"port {name_port} {errors[1]}")
+                print(f"{bcolors.WARNING} invalid disconnection{bcolors.ENDC} port{bcolors.OKGREEN} {name_port} {bcolors.ENDC} {errors[1]}")
                 return False
 
         return True
 
-    def __validate_connection(self, name_port): #Private method to identify wether a device is a hub or a host
+    def __validate_connection(self, name_port): # Private method to identify wether a device is a hub or a host
         
 
         if name_port not in self.ports.keys():
-            print(f"port {name_port} {errors[2]}")
+            print(f"{bcolors.WARNING} invalid connection{bcolors.ENDC} port  {bcolors.OKGREEN}{name_port} {bcolors.ENDC} {errors[2]}")
             return False
+
         port = self.ports[name_port]
+        
         if  port.cable != None:
-                print(f"port {name_port} {errors[3]}")
+                print(f"{bcolors.WARNING} invalid connection {bcolors.ENDC} port  {bcolors.OKGREEN}{name_port} {bcolors.ENDC}{errors[3]}")
                 return False
 
         return True
