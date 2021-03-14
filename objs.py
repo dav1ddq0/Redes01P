@@ -70,8 +70,8 @@ class Host:
     def next_bit(self):
         n = len(self.data)
         if n > 0:
-            next = self.data[n - 1]
-            self.data = self.data[0:n - 1]
+            next = self.data[0]
+            self.data = self.data[1:]
             return next
 
         if self.data_pending.qsize() > 0:
