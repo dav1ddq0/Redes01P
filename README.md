@@ -49,6 +49,11 @@
 ![fig1.2](./images/fig2.1.png)
 #### Para que no se caiga en un ciclo infinito similar a como se hace con DFS se tiene una lista donde se guardan todos los devices que hayan sido visitados mientras se esta regando la informacion por la red de esta forma al caer en el mismo hub paro.
 
+
+
+á
+í
+ó
 #####
 
 
