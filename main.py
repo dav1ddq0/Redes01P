@@ -27,7 +27,7 @@ def main():
     for line in f.readlines():
         try:
             instruction, args2 = myParser.parse(line)
-        except ValueError:
+        except TypeError:
             print("Parse Error wrong sintax")
             return
         try:

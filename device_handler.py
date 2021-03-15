@@ -232,6 +232,34 @@ class Device_handler:
                     # esta deja de llegar desde el port1 a todas las conexiones que partan de el    
                         self.devices_visited.clear()
                         self.__clear_cables_data(port1.device,port1)
+
+                if isinstance(port1.device,objs.Host) and port1.device.transmitting:
+                    port1.device.transmitting = False
+                    # el host no puede enviar en este momento la sennal pues se esta transmitiendo informacion por el canal o no tiene canal para transmitir la informacion
+                    port1.device.stopped = True
+                    # aumenta la cantidad de intentos fallidos
+                    port1.device.failed_attempts += 1 
+                    # notifica que hubo una colision y la informacion no pudo enviarse
+                    port1.device.log(port1.device.bit_sending, "send", self.time, True)
+                    # el rango se duplica en cada intento fallido
+                    if port1.device.failed_attempts < 16:
+                        nrand = random.randint(1, 2*port1.device.failed_attempts*10)
+                        # dada una colision espero un tiempo cada vez mayor para poder volverla a enviar
+                        port1.device.stopped_time = nrand * self.slot_time
+                    else:
+                        # se cumplio el maximo de intentos fallidos permitidos por lo que se decide perder esa info
+
+                        port1.device.stopped = True
+                        next_bit = port1.device.next_bit()
+                        if next_bit != None:
+                            port1.device.bit_sending =next_bit
+                            port1.device.stopped = True
+                            port1.device.stopped_time = 1
+                            port1.device.failed_attempts = 0
+                        else:
+                            port1.device.stopped = False
+
+
                 # tengo que remover el cable del puerto port1 
                 port1.cable = None        
                 del self.connections[name_port]
