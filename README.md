@@ -1,6 +1,6 @@
 # <center>Proyecto de Redes Capa fisica<center>
 ### <center>David Orlando De Quesada Oliva C311</center>
-### <center>Javier Dominguez C312</center>
+### <center>Javier E. Domínguez Hernández C312</center>
 
 ## Como ejecutar el proyecto:
 # python main.py -f file.txt
