@@ -1,4 +1,4 @@
-# <center>Proyecto de Redes Capa fisica<center>
+# <center>Proyecto1 de Redes Capa Física<center>
 ### <center>David Orlando De Quesada Oliva C311</center>
 ### <center>Javier E. Domínguez Hernández C312</center>
 
