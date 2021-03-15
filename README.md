@@ -37,7 +37,7 @@
 ## Protocolo de colisiones:
 #### Para detectar las colisiones un host lee en caso que tenga un cable conectado a el. Si la lectura que hace del cable da distinto de Null es porque se esta transmitiendo información por ese cable y por tanto se produce una colisión. Al producirse una colisión se mantiene la información que se estaba mandando por el canal y el host entra en un estado que se le llamo stopped luego que se definiera un tiempo aleatorio el cual aumenta de rango en cada intento fallido. Se decidio tener un máximo de intentos fallidos fijado en 16 luego del cual se decide perder la información . En el caso que un host intente enviar una información y este no tiene un cable conectado a su puerto y este intenta realizar una transmisión se ve como una colisión pues tampoco pudo enviar información y se aplica lo mismo que se aplicó anteriormente. Un host que su envio tuve colisión pasa a un  estado stopped.
 
-## Explicación  en algunos ejemplos como se comportaria el programa
+## Explicación  en algunos ejemplos como se comportaría el programa
 ![fig1.1](./images/fig1.1.png)
 #### Como se aprecia en la fig1.1 tengo dos host transmitiendo información a dos hubs distintos en el ms 10. Si en ese mismo instante de tiempo procedo a conectar los dos hubs quedaría : 
 ![fig1.2](./images/fig1.2.png)
