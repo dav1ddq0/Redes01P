@@ -1,4 +1,0 @@
-7 hub2_1 receive 0
-7 hub2_2 send 0
-10 hub2_1 receive 0
-10 hub2_2 send 0
