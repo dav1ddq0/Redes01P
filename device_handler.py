@@ -134,20 +134,28 @@ class Device_handler:
                 # en caso que device1 esta transmitiendo informacion riego la informacion por los nuevos
                 # cables que ahora estan interconectados desde el device2 
                 elif device1.bit_sending != None:
-                    port1.cable.data = device1.bit_sending
-                    if isinstance(device1, objs.Host) and not device1.transmitting:       
-                        self.__send_bit(device1,device1.bit_sending)
+                    
+                    if isinstance(device1, objs.Host):
+                        if device1.transmitting:    
+                            self.__send_bit(device1,device1.bit_sending)
+                        else:
+                            return    
                     else:
+                        port1.cable.data = device1.bit_sending
                         self.devices_visited.clear()
                         self.__spread_data(device2, device1.bit_sending, port2)
                     
                 # en caso que device2 esta transmitiendo informacion riego la informacion por los nuevos
                 # cables que ahora estan interconectados desde el device1    
                 elif device2.bit_sending != None:
-                    port2.cable.data = device2.bit_sending
-                    if isinstance(device2, objs.Host) and device2.transmitting:
-                        self.__send_bit(device2,device2.bit_sending)                    
-                    else:                      
+                   
+                    if isinstance(device2, objs.Host): 
+                        if device2.transmitting:
+                            self.__send_bit(device1,device1.bit_sending)     
+                        else:
+                            return            
+                    else:
+                        port2.cable.data = device2.bit_sending                      
                         self.devices_visited.clear()
                         self.__spread_data(device1, device2.bit_sending, port1)
                 
